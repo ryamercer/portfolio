@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ryan Mercer — Audio Technician</title>
+<meta name="description" content="Ryan Mercer, live audio and broadcast technician.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0C0E;
+    --text:#D6D5D0;
+    --text-dim:#84878f;
+    --line:#232529;
+    --peach:#DF9C81;
+    --rose:#DC7F82;
+    --blue:#486DD9;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'JetBrains Mono', monospace;
+    font-size:clamp(15px, 0.85vw + 12px, 17px);
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important;}
+  }
+
+  ::selection{background:var(--blue); color:#fff;}
+  a{ color:var(--blue); text-decoration:none; border-bottom:1px dotted var(--blue); }
+  a:hover, a:focus-visible{ color:var(--peach); border-color:var(--peach); }
+
+  /* left-anchored, fluid width: fills a full window at large sizes, shrinks down as needed */
+  .page{
+    padding:clamp(28px,6vw,90px) clamp(20px,6vw,90px) 120px;
+    max-width:1320px;
+  }
+
+  section{ margin:0 0 clamp(40px,6vw,64px); }
+  section:last-of-type{ margin-bottom:0; }
+
+  .eyebrow{
+    font-size:12px; letter-spacing:0.14em; text-transform:uppercase;
+    margin:0 0 10px;
+  }
+  .eyebrow.c-blue{ color:var(--blue); }
+  .eyebrow.c-rose{ color:var(--rose); }
+  .eyebrow.c-peach{ color:var(--peach); }
+
+  h1{
+    font-size:clamp(32px,4vw,58px);
+    font-weight:700;
+    margin:0 0 6px;
+    color:var(--text);
+    letter-spacing:-0.01em;
+  }
+  .role{ color:var(--rose); font-size:clamp(14px,1.1vw,19px); margin:0 0 14px; }
+  .contact{ color:var(--text-dim); margin:0; font-size:clamp(13px,0.8vw,15px); }
+  .contact span{ margin-right:4px; }
+
+  h2{
+    font-size:clamp(19px,2vw,27px);
+    font-weight:600;
+    color:var(--text);
+    margin:0 0 16px;
+  }
+
+  p{ margin:0 0 14px; max-width:62ch; }
+  p:last-child{ margin-bottom:0; }
+
+  .bio{ color:var(--text); }
+
+  /* skills */
+  .skillgroup{ margin:0 0 18px; }
+  .skillgroup:last-child{ margin-bottom:0; }
+  .skillgroup .gname{ color:var(--blue); font-size:13px; letter-spacing:0.06em; text-transform:uppercase; margin:0 0 6px; }
+  .skillgroup .items{ color:var(--text); }
+  .skillgroup .items span{ color:var(--text-dim); }
+
+  /* experience */
+  .job{ margin:0 0 26px; border-left:2px solid var(--line); padding-left:18px; }
+  .job:last-child{ margin-bottom:0; }
+  .job .dates{ color:var(--peach); font-size:12.5px; margin:0 0 4px; }
+  .job .title{ color:var(--text); font-weight:600; font-size:15.5px; margin:0 0 2px; }
+  .job .org{ color:var(--text-dim); font-size:13.5px; margin:0 0 8px; }
+  .job .desc{ color:var(--text); font-size:14px; margin:0; max-width:58ch; }
+
+  .edu-title{ color:var(--text); margin:0 0 2px; }
+  .edu-sub{ color:var(--text-dim); font-size:13.5px; margin:0; }
+
+  @media (min-width:880px){
+    .skillgrid{ display:grid; grid-template-columns:repeat(3,1fr); gap:0 32px; }
+    .skillgrid .skillgroup{ margin-bottom:0; }
+    .jobgrid{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px 40px; }
+    .jobgrid .job{ margin-bottom:0; }
+  }
+
+  /* player */
+  .subhead{ color:var(--text-dim); font-size:13.5px; margin:0 0 20px; }
+
+  .playlist{ display:flex; flex-direction:column; margin-bottom:20px; }
+  .track{
+    display:flex; align-items:baseline; gap:10px; flex-wrap:wrap;
+    padding:7px 8px; margin:0 -8px;
+    background:none; border:none; width:calc(100% + 16px);
+    color:var(--text); font-family:inherit; font-size:14px;
+    text-align:left; cursor:pointer; border-radius:3px;
+  }
+  .track:hover{ background:rgba(255,255,255,0.04); }
+  .track.active{ background:rgba(72,109,217,0.12); color:var(--blue); }
+  .track .idx{ color:var(--text-dim); }
+  .track.active .idx{ color:var(--blue); }
+  .track .meta{ color:var(--text-dim); font-size:12px; margin-left:auto; }
+
+  .transport{ display:flex; align-items:center; gap:14px; margin:0 0 28px; flex-wrap:wrap; row-gap:10px; }
+  .playbtn{
+    background:none; border:1px solid var(--line); color:var(--blue);
+    font-family:inherit; font-size:13px; padding:7px 14px; border-radius:3px;
+    cursor:pointer; transition:border-color .15s, color .15s;
+  }
+  .playbtn:hover{ border-color:var(--blue); }
+
+  .scrub{ flex:1; display:flex; align-items:center; gap:10px; color:var(--text-dim); font-size:12px; min-width:0; }
+  input[type="range"]{
+    -webkit-appearance:none; appearance:none; flex:1; height:2px;
+    background:var(--line); outline:none; min-width:0;
+  }
+  input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:10px; height:10px; border-radius:50%;
+    background:var(--blue); cursor:pointer;
+  }
+  input[type="range"]::-moz-range-thumb{
+    width:10px; height:10px; border-radius:50%; border:none; background:var(--blue); cursor:pointer;
+  }
+
+  .volume{ display:flex; align-items:center; gap:8px; color:var(--text-dim); font-size:12px; flex:none; }
+  .volume input[type="range"]{ width:80px; flex:none; }
+
+  .visualizers{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+    margin-top:12px;
+  }
+  @media (max-width:800px){
+    .visualizers{grid-template-columns:1fr;}
+  }
+  .viz-block{ margin:0; position:relative; }
+  canvas.viz-canvas{
+    width:100%; height:125px; display:block;
+    background:#08090a;
+    border:1px solid var(--line);
+    border-radius:3px;
+  }
+  .viz-meter{
+    position:absolute; top:8px; right:10px;
+    font-size:11px; letter-spacing:0.04em; color:var(--peach);
+    background:rgba(8,9,10,0.65); padding:2px 7px; border-radius:2px;
+    pointer-events:none;
+  }
+
+  .filenote{ margin-top:20px; color:var(--text-dim); font-size:12.5px; line-height:1.7; max-width:60ch; }
+  .filenote code{ color:var(--peach); }
+
+  .hero{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:clamp(20px,5vw,60px);
+    flex-wrap:wrap;
+  }
+  .hero-text{ flex:1 1 320px; min-width:0; }
+  .hero-gif{ flex:1 1 320px; max-width:460px; }
+  .hero-gif img{
+    width:100%; height:auto; display:block;
+    border:1px solid var(--line);
+    border-radius:4px;
+  }
+  @media (max-width:640px){
+    .hero{ flex-direction:column; align-items:flex-start; }
+    .hero-gif{ max-width:100%; }
+  }
+
+  footer{
+    padding:clamp(28px,7vw,72px);
+    color:var(--text-dim); font-size:12.5px;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Ryan Mercer</h1>
+      <p class="role">Audio Technician</p>
+      <p class="contact">
+        <span><a href="mailto:rmercer105@gmail.com">rmercer105@gmail.com</a></span>
+        <span>·</span>
+        <span><a href="tel:6123004465">612-300-4465</a></span>
+        <span>·</span>
+        <span>Madison, WI</span>
+      </p>
+    </div>
+    <div class="hero-gif">
+      <img src="music.gif" alt="music">
+    </div>
+  </section>
+
+  <section id="mix">
+    <p class="eyebrow c-blue">Listen</p>
+    <h2>Selected Recordings</h2>
+    <p class="subhead">FOH mixes &amp; multitrack sessions, played back at source resolution.</p>
+
+    <div class="playlist" id="playlist"></div>
+
+    <div class="transport">
+      <button class="playbtn" id="playBtn" type="button">Play</button>
+      <div class="scrub">
+        <span id="curTime">0:00</span>
+        <input type="range" id="seek" value="0" min="0" max="100" step="0.1">
+        <span id="durTime">0:00</span>
+      </div>
+      <div class="volume">
+        <span>Vol</span>
+        <input type="range" id="volume" min="0" max="1" step="0.01" value="1">
+      </div>
+    </div>
+
+    <div class="visualizers">
+      <div class="viz-block">
+        <canvas class="viz-canvas" id="scope" width="1000" height="150" aria-hidden="true"></canvas>
+      </div>
+
+      <div class="viz-block">
+        <canvas class="viz-canvas" id="spectrum" width="1000" height="150" aria-hidden="true"></canvas>
+        <span class="viz-meter" id="lufsReadout">LUFS —</span>
+      </div>
+    </div>
+
+    <audio id="audio" preload="metadata"></audio>
+
+  </section>
+
+  <section id="about">
+    <p class="eyebrow c-rose">About</p>
+    <h2>Summary</h2>
+    <p class="bio">Audio technician and Communication Arts student at the University of Wisconsin–Madison specializing in live sound, broadcast audio, and recording. Experienced supporting performances through FOH mixing, live recording, and technical production, with hands-on experience in venue, broadcast, and corporate A/V environments. Expected to graduate Fall 2026.</p>
+  </section>
+
+  <section id="skills">
+    <p class="eyebrow c-peach">Skills</p>
+    <h2>What I Know</h2>
+
+    <div class="skillgrid">
+      <div class="skillgroup">
+        <p class="gname">Audio</p>
+        <p class="items">Live sound reinforcement<span>,</span> FOH mixing<span>,</span> signal flow &amp; routing<span>,</span> multitrack recording<span>,</span> mixing &amp; mastering</p>
+      </div>
+      <div class="skillgroup">
+        <p class="gname">Equipment</p>
+        <p class="items">Digital consoles<span>,</span> microphone systems<span>,</span> monitor systems<span>,</span> DI boxes<span>,</span> live recording setups</p>
+      </div>
+      <div class="skillgroup">
+        <p class="gname">Programs</p>
+        <p class="items">Adobe Audition<span>,</span> Adobe Premiere Pro<span>,</span> Adobe After Effects</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="experience">
+    <p class="eyebrow c-blue">Experience</p>
+    <h2>Where I've Worked</h2>
+
+    <div class="jobgrid">
+      <div class="job">
+        <p class="dates">May 2026 – Dec 2026</p>
+        <p class="title">Assistant Technical Director</p>
+        <p class="org">WSUM Student Radio, Madison, WI</p>
+        <p class="desc">FOH mixing, live recording, and broadcast engineering for weekly in-station artist performances; equipment maintenance and crew training.</p>
+      </div>
+
+      <div class="job">
+        <p class="dates">May 2026 – Dec 2026</p>
+        <p class="title">Special Events Attendant</p>
+        <p class="org">City of Madison Parks Division</p>
+        <p class="desc">Deployed portable PA systems and a mobile LED video wall for outdoor screenings and public events, from setup through teardown.</p>
+      </div>
+
+      <div class="job">
+        <p class="dates">May 2025 – Aug 2025</p>
+        <p class="title">Production Intern</p>
+        <p class="org">EideCom, Minneapolis, MN</p>
+        <p class="desc">Supported load-in/load-out of A/V and staging equipment; organized and inventoried gear for a company-wide relocation.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="education">
+    <p class="eyebrow c-rose">Education</p>
+    <h2>School</h2>
+    <p class="edu-title">B.S., Communication Arts — Radio, Television, Film</p>
+    <p class="edu-sub">University of Wisconsin–Madison · Expected Fall 2026</p>
+  </section>
+
+</div>
+
+<footer>© 2026 Ryan Mercer</footer>
+
+<script>
+(function(){
+  /* ============================================================
+     EDIT THIS LIST to match your audio files.
+     Files should sit in the SAME FOLDER as this index.html file.
+  ============================================================ */
+  const TRACKS = [
+    { title: "2026-06-03 lightris & sero | Cloud Rap, Alt-Pop", 
+    file: "https://f005.backblazeb2.com/file/ryanmercer-media/audio/lightris-sero-excerpt.wav", 
+    meta: "WAV" },
+    { title: "2026-06-13 Sapsucker | Indie Rock, Indie Pop", 
+    file: "https://f005.backblazeb2.com/file/ryanmercer-media/2026-06-13+Sapsucker+excerpt.wav", 
+    meta: "WAV" },
+    { title: "2026-06-26 Steeplechase | Singer-Songwriter, Indie Pop", 
+    file: "https://f005.backblazeb2.com/file/ryanmercer-media/2026-06-26+Steeplechase+excerpt.wav", 
+    meta: "WAV" },
+  ];
+
+  const audio = document.getElementById('audio');
+  const playlistEl = document.getElementById('playlist');
+  const playBtn = document.getElementById('playBtn');
+  const seek = document.getElementById('seek');
+  const curTimeEl = document.getElementById('curTime');
+  const durTimeEl = document.getElementById('durTime');
+  const canvas = document.getElementById('scope');
+  const ctx = canvas.getContext('2d');
+
+  let currentIndex = -1;
+
+  function fmt(t){
+    if(!isFinite(t)) return "0:00";
+    const m = Math.floor(t/60);
+    const s = Math.floor(t%60).toString().padStart(2,'0');
+    return `${m}:${s}`;
+  }
+
+  function renderPlaylist(){
+    playlistEl.innerHTML = "";
+    TRACKS.forEach((t, i) => {
+      const row = document.createElement('button');
+      row.className = 'track' + (i === currentIndex ? ' active' : '');
+      row.type = 'button';
+      row.innerHTML = `
+        <span class="idx">${(i+1).toString().padStart(2,'0')}</span>
+        <span>${t.title}</span>
+        <span class="meta">${t.meta || ''}</span>
+      `;
+      row.addEventListener('click', () => loadTrack(i, true));
+      playlistEl.appendChild(row);
+    });
+  }
+
+  function loadTrack(i, autoplay){
+    currentIndex = i;
+    audio.src = TRACKS[i].file;
+    audio.load();
+    renderPlaylist();
+    if(autoplay){
+      ensureAudioGraph();
+      audio.play().catch(()=>{ /* file likely missing until user adds it */ });
+    }
+  }
+
+  playBtn.addEventListener('click', () => {
+    if(currentIndex === -1){
+      loadTrack(0, true);
+      return;
+    }
+
+    ensureAudioGraph();
+
+    if(audio.paused){
+      audio.play().catch(()=>{});
+    } else {
+      audio.pause();
+    }
+  });
+
+  audio.addEventListener('play', () => {
+    playBtn.textContent = 'Pause';
+    renderPlaylist();
+  });
+
+  audio.addEventListener('pause', () => {
+    playBtn.textContent = 'Play';
+    renderPlaylist();
+  });
+
+  let draggingSeek = false;
+
+  seek.addEventListener('mousedown', () => {
+    draggingSeek = true;
+  });
+
+  seek.addEventListener('mouseup', () => {
+    draggingSeek = false;
+
+    if(isFinite(audio.duration)){
+      audio.currentTime = (seek.value / 100) * audio.duration;
+    }
+  });
+
+  seek.addEventListener('input', () => {
+    if(isFinite(audio.duration)){
+      const previewTime = (seek.value / 100) * audio.duration;
+      curTimeEl.textContent = fmt(previewTime);
+    }
+  });
+
+  document.addEventListener('mouseup', () => {
+    if(draggingSeek){
+      draggingSeek = false;
+
+      if(isFinite(audio.duration)){
+        audio.currentTime = (seek.value / 100) * audio.duration;
+      }
+    }
+  });
+
+  audio.addEventListener('timeupdate', () => {
+    if(!isFinite(audio.duration)) return;
+
+    if(!draggingSeek){
+      seek.value = (audio.currentTime / audio.duration) * 100;
+    }
+
+    curTimeEl.textContent = fmt(audio.currentTime);
+  });
+
+  audio.addEventListener('loadedmetadata', () => {
+    durTimeEl.textContent = fmt(audio.duration);
+  });
+
+  audio.addEventListener('ended', () => {
+    if(currentIndex < TRACKS.length - 1){
+      loadTrack(currentIndex + 1, true);
+    }
+  });
+
+  const volumeSlider = document.getElementById('volume');
+  audio.volume = parseFloat(volumeSlider.value);
+  volumeSlider.addEventListener('input', () => {
+    const v = parseFloat(volumeSlider.value);
+    audio.volume = v; // fallback for before the Web Audio graph exists
+    if(gainNode){ gainNode.gain.value = v; }
+  });
+
+  /* ---------------- Web Audio: oscilloscope + spectrum ---------------- */
+  const scopeCanvas = document.getElementById('scope');
+  const scopeCtx = scopeCanvas.getContext('2d');
+  const specCanvas = document.getElementById('spectrum');
+  const specCtx = specCanvas.getContext('2d');
+
+  // ---- tunable parameters ----
+  const SCOPE_WINDOW_MS = 50;      // how much time the oscilloscope shows across its width
+  const SCOPE_GAIN = 2;          // vertical amplification of the waveform
+
+  const SPEC_BLOCK_SIZE = 8192;   // FFT size
+  const SPEC_FREQ_LO = 20;
+  const SPEC_FREQ_HI = 20000;
+  const SPEC_DB_LO = -80;
+  const SPEC_DB_HI = 0;
+  const SPEC_SLOPE = 0;            // dB/oct tilt, 0 = flat
+  const SPEC_AVG_TIME_MS = 1000;   // RT averaging time constant
+
+  let audioCtx, source, gainNode, scopeAnalyser, scopeData, specAnalyser, specRaw, specSmoothed;
+  let lufsShelf, lufsHighpass, lufsAnalyser, lufsBuffer, lufsSmoothed = -70;
+  const lufsReadout = document.getElementById('lufsReadout');
+
+  function ensureAudioGraph(){
+    if(audioCtx) return;
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    source = audioCtx.createMediaElementSource(audio);
+
+    // volume lives on a GainNode — once the element is routed through Web Audio,
+    // browsers stop respecting audio.volume, so this is the real volume control
+    gainNode = audioCtx.createGain();
+    gainNode.gain.value = parseFloat(volumeSlider.value);
+    source.connect(gainNode);
+
+    // oscilloscope tap
+    scopeAnalyser = audioCtx.createAnalyser();
+    scopeAnalyser.fftSize = 16384; // large buffer; we slice the first SCOPE_WINDOW_MS worth of samples
+    scopeData = new Uint8Array(scopeAnalyser.fftSize);
+    gainNode.connect(scopeAnalyser);
+    scopeAnalyser.connect(audioCtx.destination);
+
+    // spectrum tap (analysis only, doesn't need its own path to destination)
+    specAnalyser = audioCtx.createAnalyser();
+    specAnalyser.fftSize = SPEC_BLOCK_SIZE;
+    specAnalyser.minDecibels = SPEC_DB_LO;
+    specAnalyser.maxDecibels = SPEC_DB_HI;
+    specAnalyser.smoothingTimeConstant = 0; // we do our own RT averaging below
+    specRaw = new Uint8Array(specAnalyser.frequencyBinCount);
+    specSmoothed = new Float32Array(specAnalyser.frequencyBinCount);
+    gainNode.connect(specAnalyser);
+
+    // loudness tap: rough K-weighting (ITU-R BS.1770 style) feeding a momentary LUFS estimate
+    lufsShelf = audioCtx.createBiquadFilter();
+    lufsShelf.type = 'highshelf';
+    lufsShelf.frequency.value = 1500;
+    lufsShelf.gain.value = 4;
+
+    lufsHighpass = audioCtx.createBiquadFilter();
+    lufsHighpass.type = 'highpass';
+    lufsHighpass.frequency.value = 38;
+    lufsHighpass.Q.value = 0.5;
+
+    lufsAnalyser = audioCtx.createAnalyser();
+    lufsAnalyser.fftSize = 2048;
+    lufsBuffer = new Float32Array(lufsAnalyser.fftSize);
+
+    gainNode.connect(lufsShelf);
+    lufsShelf.connect(lufsHighpass);
+    lufsHighpass.connect(lufsAnalyser);
+  }
+
+  function resizeCanvas(canvas){
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * devicePixelRatio;
+    canvas.height = rect.height * devicePixelRatio;
+  }
+  function resizeAll(){ resizeCanvas(scopeCanvas); resizeCanvas(specCanvas); }
+  window.addEventListener('resize', resizeAll);
+
+  let idlePhase = 0;
+
+  function drawScopeGrid(w, h){
+    scopeCtx.strokeStyle = 'rgba(255,255,255,0.05)';
+    scopeCtx.lineWidth = 1;
+    const rows = 4, cols = 12;
+    for(let i=1;i<rows;i++){
+      const y = (h/rows)*i;
+      scopeCtx.beginPath(); scopeCtx.moveTo(0,y); scopeCtx.lineTo(w,y); scopeCtx.stroke();
+    }
+    for(let i=1;i<cols;i++){
+      const x = (w/cols)*i;
+      scopeCtx.beginPath(); scopeCtx.moveTo(x,0); scopeCtx.lineTo(x,h); scopeCtx.stroke();
+    }
+    scopeCtx.strokeStyle = 'rgba(72,109,217,0.15)';
+    scopeCtx.beginPath(); scopeCtx.moveTo(0,h/2); scopeCtx.lineTo(w,h/2); scopeCtx.stroke();
+  }
+
+  function drawScope(){
+    if(scopeCanvas.width === 0) resizeCanvas(scopeCanvas);
+    const w = scopeCanvas.width, h = scopeCanvas.height;
+    scopeCtx.clearRect(0,0,w,h);
+    drawScopeGrid(w,h);
+
+    scopeCtx.lineWidth = 2 * devicePixelRatio;
+    scopeCtx.strokeStyle = '#486DD9';
+    scopeCtx.shadowColor = 'rgba(72,109,217,0.55)';
+    scopeCtx.shadowBlur = 6;
+    scopeCtx.beginPath();
+
+    if(scopeAnalyser && !audio.paused){
+      scopeAnalyser.getByteTimeDomainData(scopeData);
+      const sampleCount = Math.min(
+        scopeData.length,
+        Math.round((SCOPE_WINDOW_MS / 1000) * audioCtx.sampleRate)
+      );
+      const slice = w / sampleCount;
+      let x = 0;
+      for(let i=0;i<sampleCount;i++){
+        const v = (scopeData[i] - 128) / 128; // -1..1
+        const y = h/2 - (v * SCOPE_GAIN) * (h/2);
+        const yc = Math.max(0, Math.min(h, y));
+        if(i===0) scopeCtx.moveTo(x,yc); else scopeCtx.lineTo(x,yc);
+        x += slice;
+      }
+    } else {
+      idlePhase += 0.045;
+      const points = 200;
+      for(let i=0;i<points;i++){
+        const x = (i/points) * w;
+        const y = h/2 + Math.sin(i*0.25 + idlePhase) * (h*0.06) * Math.sin(idlePhase*0.6);
+        if(i===0) scopeCtx.moveTo(x,y); else scopeCtx.lineTo(x,y);
+      }
+    }
+    scopeCtx.stroke();
+    scopeCtx.shadowBlur = 0;
+  }
+
+  function freqToX(freq, w){
+    const lo = Math.log10(SPEC_FREQ_LO), hi = Math.log10(SPEC_FREQ_HI);
+    return ((Math.log10(freq) - lo) / (hi - lo)) * w;
+  }
+
+  function drawSpecGrid(w, h){
+    specCtx.strokeStyle = 'rgba(255,255,255,0.06)';
+    specCtx.lineWidth = 1;
+    specCtx.font = `${10 * devicePixelRatio}px 'JetBrains Mono', monospace`;
+    specCtx.fillStyle = 'rgba(132,135,143,0.8)';
+
+    const freqTicks = [20,50,100,200,500,1000,2000,5000,10000,20000];
+    freqTicks.forEach(f => {
+      const x = freqToX(f, w);
+      specCtx.beginPath(); specCtx.moveTo(x,0); specCtx.lineTo(x,h); specCtx.stroke();
+    });
+
+    const dbTicks = [0,-20,-40,-60,-80];
+    dbTicks.forEach(db => {
+      const y = h * (1 - (db - SPEC_DB_LO)/(SPEC_DB_HI - SPEC_DB_LO));
+      specCtx.beginPath(); specCtx.moveTo(0,y); specCtx.lineTo(w,y); specCtx.stroke();
+    });
+  }
+
+  let lastFrameTime = performance.now();
+
+function drawSpectrum(now){
+  if(specCanvas.width === 0) resizeCanvas(specCanvas);
+  const w = specCanvas.width, h = specCanvas.height;
+
+  specCtx.clearRect(0,0,w,h);
+  drawSpecGrid(w,h);
+
+  const dt = now - lastFrameTime;
+
+  let firstX = null;
+  let lastX = null;
+  let started = false;
+
+  specCtx.beginPath();
+
+  function plot(x,y){
+    if(!started){
+      specCtx.moveTo(x,y);
+      firstX = x;
+      started = true;
+    } else {
+      specCtx.lineTo(x,y);
+    }
+    lastX = x;
+  }
+
+  if(specAnalyser && !audio.paused){
+
+    specAnalyser.getByteFrequencyData(specRaw);
+
+    const alpha = 1 - Math.exp(-dt / SPEC_AVG_TIME_MS);
+    const binHz = audioCtx.sampleRate / SPEC_BLOCK_SIZE;
+
+    // start exactly at 20Hz
+    plot(freqToX(SPEC_FREQ_LO,w), h);
+
+    for(let i=1;i<specRaw.length;i++){
+
+      const freq = i * binHz;
+
+      if(freq < SPEC_FREQ_LO) continue;
+      if(freq > SPEC_FREQ_HI) break;
+
+      const raw = specRaw[i] / 255;
+
+      specSmoothed[i] += 
+        (raw - specSmoothed[i]) * alpha;
+
+      const octavesFromRef = Math.log2(freq / 1000);
+      const tiltDb = SPEC_SLOPE * octavesFromRef;
+
+      const v = Math.max(
+        0,
+        Math.min(
+          1,
+          specSmoothed[i] +
+          tiltDb / (SPEC_DB_HI - SPEC_DB_LO)
+        )
+      );
+
+      plot(
+        freqToX(freq,w),
+        h * (1-v)
+      );
+    }
+
+    // finish at 20kHz
+    plot(freqToX(SPEC_FREQ_HI,w), h);
+
+  } else {
+
+    const points = 120;
+    idlePhase += 0.02;
+
+    for(let i=0;i<points;i++){
+
+      const freq =
+        SPEC_FREQ_LO *
+        Math.pow(
+          SPEC_FREQ_HI/SPEC_FREQ_LO,
+          i/points
+        );
+
+      const floor =
+        0.05 +
+        0.02 *
+        Math.sin(i*0.3 + idlePhase);
+
+      plot(
+        freqToX(freq,w),
+        h*(1-Math.max(0,floor))
+      );
+    }
+  }
+
+
+  if(started){
+
+    specCtx.lineTo(lastX,h);
+    specCtx.lineTo(firstX,h);
+    specCtx.closePath();
+
+    const grad =
+      specCtx.createLinearGradient(0,0,0,h);
+
+    grad.addColorStop(
+      0,
+      'rgba(72,109,217,0.85)'
+    );
+
+    grad.addColorStop(
+      1,
+      'rgba(72,109,217,0.02)'
+    );
+
+    specCtx.fillStyle = grad;
+    specCtx.fill();
+
+    specCtx.lineWidth = 1.5 * devicePixelRatio;
+    specCtx.strokeStyle = '#7C9BE8';
+    specCtx.stroke();
+
+  }
+
+  lastFrameTime = now;
+}
+
+  function updateLufs(dt){
+    if(!lufsAnalyser || audio.paused){
+      lufsReadout.textContent = 'LUFS —';
+      return;
+    }
+    lufsAnalyser.getFloatTimeDomainData(lufsBuffer);
+    let sum = 0;
+    for(let i=0;i<lufsBuffer.length;i++){ sum += lufsBuffer[i] * lufsBuffer[i]; }
+    const meanSquare = sum / lufsBuffer.length;
+    const instant = meanSquare > 0 ? (-0.691 + 10 * Math.log10(meanSquare)) : -70;
+    const alpha = 1 - Math.exp(-dt / 400); // ~400ms momentary window
+    lufsSmoothed += (instant - lufsSmoothed) * alpha;
+    lufsReadout.textContent = 'LUFS ' + Math.max(-70, lufsSmoothed).toFixed(1);
+  }
+
+  function draw(now){
+    requestAnimationFrame(draw);
+    drawScope();
+    updateLufs(now - lastFrameTime);
+    drawSpectrum(now || performance.now());
+  }
+
+  renderPlaylist();
+  resizeAll();
+  requestAnimationFrame(draw);
+})();
+</script>
+
+</body>
+</html>
