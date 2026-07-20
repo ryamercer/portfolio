@@ -123,17 +123,6 @@
   }
   .playbtn:hover{ border-color:var(--blue); }
 
-  .loading-spinner{
-    display:none;
-    width:14px; height:14px;
-    border:2px solid rgba(72,109,217,0.25);
-    border-top-color:var(--blue);
-    border-radius:50%;
-    animation:spin 0.7s linear infinite;
-  }
-  .loading-spinner.active{ display:inline-block; }
-  @keyframes spin{ to{ transform:rotate(360deg); } }
-
   .scrub{ flex:1; display:flex; align-items:center; gap:10px; color:var(--text-dim); font-size:12px; min-width:0; }
   input[type="range"]{
     -webkit-appearance:none; appearance:none; flex:1; height:2px;
@@ -230,7 +219,6 @@
 
     <div class="transport">
       <button class="playbtn" id="playBtn" type="button">Play</button>
-      <span class="loading-spinner" id="loadingSpinner" aria-hidden="true"></span>
       <div class="scrub">
         <span id="curTime">0:00</span>
         <input type="range" id="seek" value="0" min="0" max="100" step="0.1">
@@ -465,14 +453,6 @@
     audio.volume = v; // fallback for before the Web Audio graph exists
     if(gainNode){ gainNode.gain.value = v; }
   });
-
-  /* ---------------- loading indicator ---------------- */
-  const loadingSpinner = document.getElementById('loadingSpinner');
-  audio.addEventListener('loadstart', () => loadingSpinner.classList.add('active'));
-  audio.addEventListener('waiting', () => loadingSpinner.classList.add('active'));
-  audio.addEventListener('canplay', () => loadingSpinner.classList.remove('active'));
-  audio.addEventListener('playing', () => loadingSpinner.classList.remove('active'));
-  audio.addEventListener('error', () => loadingSpinner.classList.remove('active'));
 
   /* ---------------- Web Audio: oscilloscope + spectrum ---------------- */
   const scopeCanvas = document.getElementById('scope');
