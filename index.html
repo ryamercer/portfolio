@@ -123,6 +123,17 @@
   }
   .playbtn:hover{ border-color:var(--blue); }
 
+  .track-spinner{
+    display:inline-block;
+    width:11px; height:11px;
+    border:2px solid rgba(72,109,217,0.25);
+    border-top-color:var(--blue);
+    border-radius:50%;
+    animation:spin 0.7s linear infinite;
+    vertical-align:middle;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
   .scrub{ flex:1; display:flex; align-items:center; gap:10px; color:var(--text-dim); font-size:12px; min-width:0; }
   input[type="range"]{
     -webkit-appearance:none; appearance:none; flex:1; height:2px;
@@ -335,6 +346,7 @@
   const ctx = canvas.getContext('2d');
 
   let currentIndex = -1;
+  let isLoading = false;
 
   function fmt(t){
     if(!isFinite(t)) return "0:00";
@@ -349,8 +361,12 @@
       const row = document.createElement('button');
       row.className = 'track' + (i === currentIndex ? ' active' : '');
       row.type = 'button';
+      const showSpinner = (i === currentIndex && isLoading);
+      const idxHTML = showSpinner
+        ? '<span class="track-spinner" aria-label="Loading"></span>'
+        : (i+1).toString().padStart(2,'0');
       row.innerHTML = `
-        <span class="idx">${(i+1).toString().padStart(2,'0')}</span>
+        <span class="idx">${idxHTML}</span>
         <span>${t.title}</span>
         <span class="meta">${t.meta || ''}</span>
       `;
@@ -359,8 +375,14 @@
     });
   }
 
+  function setLoading(v){
+    isLoading = v;
+    renderPlaylist();
+  }
+
   function loadTrack(i, autoplay){
     currentIndex = i;
+    isLoading = true;
     audio.src = TRACKS[i].file;
     audio.load();
     renderPlaylist();
@@ -394,6 +416,12 @@
     playBtn.textContent = 'Play';
     renderPlaylist();
   });
+
+  audio.addEventListener('loadstart', () => setLoading(true));
+  audio.addEventListener('waiting', () => setLoading(true));
+  audio.addEventListener('canplay', () => setLoading(false));
+  audio.addEventListener('playing', () => setLoading(false));
+  audio.addEventListener('error', () => setLoading(false));
 
   let draggingSeek = false;
 
