@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ryan Mercer — Audio Technician</title>
+<meta name="description" content="Ryan Mercer, live audio and broadcast technician.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0C0E;
+    --text:#D6D5D0;
+    --text-dim:#84878f;
+    --line:#232529;
+    --peach:#DF9C81;
+    --rose:#DC7F82;
+    --blue:#486DD9;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'JetBrains Mono', monospace;
+    font-size:clamp(15px, 0.85vw + 12px, 17px);
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important;}
+  }
+
+  ::selection{background:var(--blue); color:#fff;}
+  a{ color:var(--blue); text-decoration:none; border-bottom:1px dotted var(--blue); }
+  a:hover, a:focus-visible{ color:var(--peach); border-color:var(--peach); }
+
+  .page{
+    padding:clamp(28px,6vw,90px) clamp(20px,6vw,90px) 120px;
+    max-width:1100px;
+  }
+
+  section{ margin:0 0 clamp(40px,6vw,64px); }
+  section:last-of-type{ margin-bottom:0; }
+
+  h1{
+    font-size:clamp(32px,4vw,58px);
+    font-weight:700;
+    margin:0 0 6px;
+    color:var(--text);
+    letter-spacing:-0.01em;
+  }
+  .role{ color:var(--rose); font-size:clamp(14px,1.1vw,19px); margin:0 0 14px; }
+  .contact{ color:var(--text-dim); margin:0; font-size:clamp(13px,0.8vw,15px); }
+  .contact span{ margin-right:4px; }
+
+  h2{
+    font-size:clamp(19px,2vw,27px);
+    font-weight:600;
+    color:var(--text);
+    margin:0 0 8px;
+  }
+  h2.c-blue{ color:var(--blue); }
+  h2.c-rose{ color:var(--rose); }
+  h2.c-peach{ color:var(--peach); }
+
+  .subhead{ color:var(--text-dim); font-size:13.5px; margin:0 0 24px; }
+
+  p{ margin:0 0 14px; max-width:62ch; }
+  p:last-child{ margin-bottom:0; }
+
+  /* ---------------- track list ---------------- */
+  .tracklist{ display:flex; flex-direction:column; gap:10px; }
+
+  details.track{
+    border:1px solid var(--line);
+    border-radius:4px;
+    background:rgba(255,255,255,0.015);
+    overflow:hidden;
+  }
+
+  details.track[open]{ background:rgba(72,109,217,0.05); }
+
+  summary.track-head{
+    list-style:none;
+    cursor:pointer;
+    padding:14px 16px;
+    display:flex;
+    align-items:baseline;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  summary.track-head::-webkit-details-marker{ display:none; }
+
+  summary.track-head .chev{
+    color:var(--blue);
+    font-size:12px;
+    transition:transform .15s ease;
+    flex:none;
+    width:12px;
+  }
+  details[open] summary.track-head .chev{ transform:rotate(90deg); }
+
+  summary.track-head .idx{ color:var(--text-dim); font-size:13px; flex:none; }
+  summary.track-head .t-title{ color:var(--text); font-weight:600; font-size:14.5px; }
+  summary.track-head .t-tags{ color:var(--text-dim); font-size:12px; margin-left:auto; }
+
+  .track-body{
+    padding:0 16px 20px 42px;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+
+  @media (min-width:760px){
+    .track-body{ flex-direction:row; }
+    .track-body .col{ flex:1 1 50%; min-width:0; }
+  }
+
+  .track-body .col-label{
+    color:var(--text-dim);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    margin:0 0 8px;
+  }
+
+  audio{
+    width:100%;
+    height:36px;
+    filter:invert(1) hue-rotate(180deg) contrast(0.9);
+    border-radius:3px;
+  }
+
+  .video-frame{
+    position:relative;
+    width:100%;
+    aspect-ratio:16/9;
+    background:#08090a;
+    border:1px solid var(--line);
+    border-radius:3px;
+    overflow:hidden;
+  }
+  .video-frame iframe{
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    border:0;
+  }
+  .video-placeholder{
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--text-dim); font-size:12.5px; text-align:center; padding:12px;
+  }
+
+  .about p{ color:var(--text); }
+
+  .hero{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:clamp(20px,5vw,60px);
+    flex-wrap:wrap;
+  }
+  .hero-text{ flex:1 1 320px; min-width:0; }
+  .hero-gif{ flex:0 1 260px; max-width:260px; }
+  .hero-gif img{
+    width:100%; height:auto; display:block;
+    border:1px solid var(--line);
+    border-radius:4px;
+  }
+  @media (max-width:640px){
+    .hero{ flex-direction:column; align-items:flex-start; }
+    .hero-gif{ max-width:180px; }
+  }
+
+  footer{
+    padding:clamp(28px,7vw,72px);
+    color:var(--text-dim); font-size:12.5px;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Ryan Mercer</h1>
+      <p class="role">Audio Technician</p>
+      <p class="contact">
+        <span><a href="mailto:rmercer105@gmail.com">rmercer105@gmail.com</a></span>
+        <span>·</span>
+        <span><a href="tel:6123004465">612-300-4465</a></span>
+        <span>·</span>
+        <span>Madison, WI</span>
+      </p>
+    </div>
+    <div class="hero-gif">
+      <img src="music.gif" alt="music">
+    </div>
+  </section>
+
+  <section id="mix">
+    <h2 class="c-blue">Selected Recordings</h2>
+    <p class="subhead">FOH mixes &amp; multitrack sessions — open a track to listen or watch.</p>
+
+    <div class="tracklist" id="tracklist"></div>
+  </section>
+
+  <section id="about" class="about">
+    <h2 class="c-rose">Summary</h2>
+    <p>Audio technician and Communication Arts student at the University of Wisconsin–Madison specializing in live sound, broadcast audio, and recording. Experienced supporting performances through FOH mixing, live recording, and technical production, with hands-on experience in venue, broadcast, and corporate A/V environments. Expected to graduate Fall 2026.</p>
+  </section>
+
+</div>
+
+<footer>© 2026 Ryan Mercer</footer>
+
+<script>
+/* ============================================================
+   ADD A TRACK: append one object to this array. Nothing else
+   in this file needs to change.
+
+   title      : shown in the row
+   date       : "YYYY-MM-DD" or any short label
+   tags       : short genre/context string, right-aligned
+   audioFile  : filename of the audio file, sitting in this
+                same folder (upload it alongside index.html)
+   youtubeId  : the ID from the YouTube URL, e.g. for
+                https://youtu.be/feyz3PxqceQ the ID is
+                "feyz3PxqceQ". Leave as "" if there's no video
+                yet — the video panel will show a placeholder.
+============================================================ */
+const TRACKS = [
+  {
+    title: "lightris & sero",
+    date: "2026-06-03",
+    tags: "Cloud Rap, Alt-Pop",
+    audioFile: "2026-06-03 lightris & sero excerpt.wav",
+    youtubeId: "feyz3PxqceQ"
+  },
+  {
+    title: "Sapsucker",
+    date: "2026-06-13",
+    tags: "Indie Rock, Indie Pop",
+    audioFile: "2026-06-13 Sapsucker excerpt.wav",
+    youtubeId: ""
+  },
+  {
+    title: "Steeplechase",
+    date: "2026-06-26",
+    tags: "Singer-Songwriter, Indie Pop",
+    audioFile: "2026-06-26 Steeplechase excerpt.wav",
+    youtubeId: ""
+  }
+];
+
+const tracklistEl = document.getElementById('tracklist');
+
+TRACKS.forEach((t, i) => {
+  const details = document.createElement('details');
+  details.className = 'track';
+
+  const summary = document.createElement('summary');
+  summary.className = 'track-head';
+  summary.innerHTML = `
+    <span class="chev">▸</span>
+    <span class="idx">${(i+1).toString().padStart(2,'0')}</span>
+    <span class="t-title">${t.title}</span>
+    <span class="t-tags">${t.date}${t.tags ? ' · ' + t.tags : ''}</span>
+  `;
+
+  const body = document.createElement('div');
+  body.className = 'track-body';
+
+  const audioCol = document.createElement('div');
+  audioCol.className = 'col';
+  audioCol.innerHTML = `
+    <p class="col-label">Listen</p>
+    <audio controls preload="none" src="${encodeURI(t.audioFile)}"></audio>
+  `;
+
+  const videoCol = document.createElement('div');
+  videoCol.className = 'col';
+  const videoFrame = document.createElement('div');
+  videoFrame.className = 'video-frame';
+  videoCol.innerHTML = `<p class="col-label">Watch</p>`;
+  videoCol.appendChild(videoFrame);
+  if(t.youtubeId){
+    videoFrame.innerHTML = `<div class="video-placeholder">Video loads when opened</div>`;
+  } else {
+    videoFrame.innerHTML = `<div class="video-placeholder">Video coming soon</div>`;
+  }
+
+  body.appendChild(audioCol);
+  body.appendChild(videoCol);
+  details.appendChild(summary);
+  details.appendChild(body);
+  tracklistEl.appendChild(details);
+
+  // lazy-load the YouTube iframe only once this track is opened,
+  // so closed tracks don't waste bandwidth loading video players
+  let loaded = false;
+  details.addEventListener('toggle', () => {
+    if(details.open && !loaded && t.youtubeId){
+      loaded = true;
+      videoFrame.innerHTML = `
+        <iframe
+          src="https://www.youtube.com/embed/${t.youtubeId}"
+          title="${t.title}"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen>
+        </iframe>
+      `;
+    }
+  });
+});
+</script>
+
+</body>
+</html>
