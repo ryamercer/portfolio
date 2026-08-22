@@ -8,232 +8,319 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0B0C0E;
-    --text:#D6D5D0;
-    --text-dim:#84878f;
-    --line:#232529;
-    --peach:#DF9C81;
-    --rose:#DC7F82;
-    --blue:#486DD9;
+    --bg:#14161B;
+    --surface:#1C1F26;
+    --surface-hi:#22262F;
+    --text:#EDEBE6;
+    --text-dim:#8B8D93;
+    --line:#2A2D35;
+    --accent:#E8A33D;
+    --accent-dim:#8A6326;
   }
 
   *{box-sizing:border-box;}
+  html{ scroll-behavior:smooth; }
   body{
     margin:0;
     background:var(--bg);
     color:var(--text);
-    font-family:'JetBrains Mono', monospace;
-    font-size:clamp(15px, 0.85vw + 12px, 17px);
-    line-height:1.65;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:15px;
+    line-height:1.6;
     -webkit-font-smoothing:antialiased;
+    padding-bottom:96px; /* clears the fixed player */
   }
 
   @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
     *{animation-duration:0.001ms !important; animation-iteration-count:1 !important;}
   }
 
-  ::selection{background:var(--blue); color:#fff;}
-  a{ color:var(--blue); text-decoration:none; border-bottom:1px dotted var(--blue); }
-  a:hover, a:focus-visible{ color:var(--peach); border-color:var(--peach); }
+  h1,h2{ font-family:'Space Grotesk', sans-serif; }
 
-  .page{
-    padding:clamp(28px,6vw,90px) clamp(20px,6vw,90px) 120px;
-    max-width:1100px;
+  :focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  /* ---------------- header ---------------- */
+  header.masthead{
+    padding:clamp(32px,7vw,72px) clamp(20px,6vw,64px) clamp(24px,4vw,40px);
+    border-bottom:1px solid var(--line);
   }
-
-  section{ margin:0 0 clamp(40px,6vw,64px); }
-  section:last-of-type{ margin-bottom:0; }
-
-  h1{
-    font-size:clamp(32px,4vw,58px);
+  header.masthead h1{
+    font-size:clamp(30px,4.5vw,52px);
     font-weight:700;
     margin:0 0 6px;
-    color:var(--text);
     letter-spacing:-0.01em;
   }
-  .role{ color:var(--rose); font-size:clamp(14px,1.1vw,19px); margin:0 0 14px; }
-  .contact{ color:var(--text-dim); margin:0; font-size:clamp(13px,0.8vw,15px); }
-  .contact span{ margin-right:4px; }
-
-  h2{
-    font-size:clamp(19px,2vw,27px);
-    font-weight:600;
-    color:var(--text);
-    margin:0 0 8px;
+  header.masthead .role{
+    color:var(--accent);
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    margin:0 0 18px;
   }
-  h2.c-blue{ color:var(--blue); }
-  h2.c-rose{ color:var(--rose); }
-  h2.c-peach{ color:var(--peach); }
-
-  .subhead{ color:var(--text-dim); font-size:13.5px; margin:0 0 24px; }
-
-  p{ margin:0 0 14px; max-width:62ch; }
-  p:last-child{ margin-bottom:0; }
+  header.masthead .contact{
+    display:flex;
+    flex-wrap:wrap;
+    gap:4px 14px;
+    color:var(--text-dim);
+    font-size:13.5px;
+  }
+  header.masthead .contact a{
+    color:var(--text-dim);
+    text-decoration:none;
+    border-bottom:1px solid var(--line);
+    transition:color .15s, border-color .15s;
+  }
+  header.masthead .contact a:hover{ color:var(--accent); border-color:var(--accent); }
 
   /* ---------------- track list ---------------- */
-  .tracklist{ display:flex; flex-direction:column; gap:10px; }
+  main{ padding:clamp(24px,5vw,40px) clamp(20px,6vw,64px) 0; max-width:1000px; }
 
-  details.track{
-    border:1px solid var(--line);
-    border-radius:4px;
-    background:rgba(255,255,255,0.015);
-    overflow:hidden;
-  }
-
-  details.track[open]{ background:rgba(72,109,217,0.05); }
-
-  summary.track-head{
-    list-style:none;
-    cursor:pointer;
-    padding:14px 16px;
+  .list-head{
     display:flex;
     align-items:baseline;
-    gap:12px;
-    flex-wrap:wrap;
-  }
-  summary.track-head::-webkit-details-marker{ display:none; }
-
-  summary.track-head .chev{
-    color:var(--blue);
-    font-size:12px;
-    transition:transform .15s ease;
-    flex:none;
-    width:12px;
-  }
-  details[open] summary.track-head .chev{ transform:rotate(90deg); }
-
-  summary.track-head .idx{ color:var(--text-dim); font-size:13px; flex:none; }
-  summary.track-head .t-title{ color:var(--text); font-weight:600; font-size:14.5px; }
-  summary.track-head .t-tags{ color:var(--text-dim); font-size:12px; margin-left:auto; }
-
-  .track-body{
-    padding:0 16px 20px 42px;
-    display:flex;
-    flex-direction:column;
-    gap:16px;
-  }
-
-  @media (min-width:760px){
-    .track-body{ flex-direction:row; }
-    .track-body .col{ flex:1 1 50%; min-width:0; }
-  }
-
-  .track-body .col-label{
+    justify-content:space-between;
+    margin:0 0 20px;
     color:var(--text-dim);
     font-size:11px;
     text-transform:uppercase;
-    letter-spacing:0.06em;
-    margin:0 0 8px;
+    letter-spacing:0.1em;
   }
 
-  audio{
+  .channel{
+    border-bottom:1px solid var(--line);
+  }
+  .channel:first-of-type{ border-top:1px solid var(--line); }
+
+  .channel-row{
+    display:grid;
+    grid-template-columns:44px 1fr auto auto;
+    align-items:center;
+    gap:16px;
     width:100%;
-    height:36px;
-    filter:invert(1) hue-rotate(180deg) contrast(0.9);
-    border-radius:3px;
+    background:none;
+    border:none;
+    padding:16px 4px;
+    color:var(--text);
+    font-family:inherit;
+    font-size:14.5px;
+    text-align:left;
+    cursor:pointer;
   }
+  .channel-row:hover{ background:var(--surface); }
+  .channel.playing .channel-row{ background:var(--surface-hi); }
 
+  .channel-num{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:13px;
+    color:var(--text-dim);
+    border:1px solid var(--line);
+    border-radius:3px;
+    height:28px;
+    width:28px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .channel.playing .channel-num{ color:var(--accent); border-color:var(--accent-dim); }
+
+  .channel-meta{ min-width:0; }
+  .channel-title{ font-weight:600; font-size:15px; }
+  .channel-tags{ color:var(--text-dim); font-size:12px; margin-top:2px; }
+
+  .channel-date{ color:var(--text-dim); font-size:12px; white-space:nowrap; }
+
+  .channel-state{
+    width:20px; height:20px;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--accent);
+    flex:none;
+  }
+  .channel-state svg{ width:14px; height:14px; }
+  .bars{ display:flex; align-items:flex-end; gap:2px; height:14px; }
+  .bars span{
+    width:2.5px; background:var(--accent); display:block;
+    animation:bounce 0.9s ease-in-out infinite;
+  }
+  .bars span:nth-child(1){ height:40%; animation-delay:0s; }
+  .bars span:nth-child(2){ height:100%; animation-delay:.15s; }
+  .bars span:nth-child(3){ height:65%; animation-delay:.3s; }
+  @keyframes bounce{ 0%,100%{ transform:scaleY(0.4); } 50%{ transform:scaleY(1); } }
+
+  .video-panel{
+    display:none;
+    padding:0 4px 22px 60px;
+  }
+  .channel.video-open .video-panel{ display:block; }
   .video-frame{
     position:relative;
     width:100%;
+    max-width:640px;
     aspect-ratio:16/9;
-    background:#08090a;
-    border:1px solid var(--line);
-    border-radius:3px;
-    overflow:hidden;
-  }
-  .video-frame iframe{
-    position:absolute; inset:0;
-    width:100%; height:100%;
-    border:0;
-  }
-  .video-placeholder{
-    position:absolute; inset:0;
-    display:flex; align-items:center; justify-content:center;
-    color:var(--text-dim); font-size:12.5px; text-align:center; padding:12px;
-  }
-
-  .about p{ color:var(--text); }
-
-  .hero{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:clamp(20px,5vw,60px);
-    flex-wrap:wrap;
-  }
-  .hero-text{ flex:1 1 320px; min-width:0; }
-  .hero-gif{ flex:0 1 260px; max-width:260px; }
-  .hero-gif img{
-    width:100%; height:auto; display:block;
+    background:#0B0C0F;
     border:1px solid var(--line);
     border-radius:4px;
+    overflow:hidden;
   }
-  @media (max-width:640px){
-    .hero{ flex-direction:column; align-items:flex-start; }
-    .hero-gif{ max-width:180px; }
+  .video-frame iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+  .video-frame .placeholder{
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--text-dim); font-size:12.5px;
+  }
+  .video-toggle{
+    background:none; border:1px solid var(--line); color:var(--text-dim);
+    font-family:inherit; font-size:11.5px; letter-spacing:.04em;
+    padding:5px 10px; border-radius:3px; cursor:pointer;
+    text-transform:uppercase;
+  }
+  .video-toggle:hover{ color:var(--accent); border-color:var(--accent-dim); }
+  .channel.video-open .video-toggle{ color:var(--accent); border-color:var(--accent-dim); }
+
+  /* ---------------- sticky playhead footer ---------------- */
+  .player{
+    position:fixed;
+    left:0; right:0; bottom:0;
+    background:var(--surface);
+    border-top:1px solid var(--line);
+    padding:12px clamp(16px,4vw,40px);
+    display:flex;
+    align-items:center;
+    gap:16px;
+    z-index:50;
   }
 
-  footer{
-    padding:clamp(28px,7vw,72px);
-    color:var(--text-dim); font-size:12.5px;
+  .player .playpause{
+    flex:none;
+    width:38px; height:38px;
+    border-radius:50%;
+    border:1px solid var(--accent-dim);
+    background:var(--bg);
+    color:var(--accent);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+  }
+  .player .playpause:hover{ border-color:var(--accent); }
+  .player .playpause svg{ width:14px; height:14px; }
+
+  .player .now{
+    flex:none;
+    min-width:0;
+    max-width:180px;
+    display:none;
+  }
+  .player .now .now-title{ font-size:13px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .player .now .now-sub{ font-size:11px; color:var(--text-dim); }
+
+  .player .scrub{
+    flex:1;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    min-width:0;
+  }
+  .player .time{ color:var(--text-dim); font-size:11.5px; flex:none; width:36px; }
+  .player .time.dur{ text-align:right; }
+
+  input[type="range"]{
+    -webkit-appearance:none; appearance:none;
+    flex:1; height:3px;
+    background:var(--line);
+    border-radius:2px;
+    outline:none;
+    min-width:0;
+  }
+  input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    width:11px; height:11px; border-radius:50%;
+    background:var(--accent);
+    cursor:pointer;
+    margin-top:-4px;
+  }
+  input[type="range"]::-moz-range-thumb{
+    width:11px; height:11px; border-radius:50%; border:none; background:var(--accent); cursor:pointer;
+  }
+  input[type="range"]::-webkit-slider-runnable-track{ height:3px; border-radius:2px; }
+
+  .player .empty-msg{
+    color:var(--text-dim);
+    font-size:12.5px;
+  }
+
+  @media (max-width:640px){
+    .channel-row{ grid-template-columns:36px 1fr auto; }
+    .channel-date{ display:none; }
+    .video-panel{ padding-left:4px; }
+    .player .now{ display:none !important; }
+  }
+
+  footer.credit{
+    padding:28px clamp(20px,6vw,64px) 8px;
+    color:var(--text-dim);
+    font-size:11.5px;
   }
 </style>
 </head>
 <body>
 
-<div class="page">
+<header class="masthead">
+  <h1>Ryan Mercer</h1>
+  <p class="role">Audio Technician</p>
+  <p class="contact">
+    <a href="mailto:rmercer105@gmail.com">rmercer105@gmail.com</a>
+    <span>·</span>
+    <a href="tel:6123004465">612-300-4465</a>
+    <span>·</span>
+    <span>Madison, WI</span>
+  </p>
+</header>
 
-  <section class="hero">
-    <div class="hero-text">
-      <h1>Ryan Mercer</h1>
-      <p class="role">Audio Technician</p>
-      <p class="contact">
-        <span><a href="mailto:rmercer105@gmail.com">rmercer105@gmail.com</a></span>
-        <span>·</span>
-        <span><a href="tel:6123004465">612-300-4465</a></span>
-        <span>·</span>
-        <span>Madison, WI</span>
-      </p>
-    </div>
-    <div class="hero-gif">
-      <img src="music.gif" alt="music">
-    </div>
-  </section>
+<main>
+  <div class="list-head">
+    <span>Recordings</span>
+    <span>Select a track to play</span>
+  </div>
+  <div id="channels"></div>
+</main>
 
-  <section id="mix">
-    <h2 class="c-blue">Selected Recordings</h2>
-    <p class="subhead">FOH mixes &amp; multitrack sessions — open a track to listen or watch.</p>
+<footer class="credit">© 2026 Ryan Mercer</footer>
 
-    <div class="tracklist" id="tracklist"></div>
-  </section>
-
-  <section id="about" class="about">
-    <h2 class="c-rose">Summary</h2>
-    <p>Audio technician and Communication Arts student at the University of Wisconsin–Madison specializing in live sound, broadcast audio, and recording. Experienced supporting performances through FOH mixing, live recording, and technical production, with hands-on experience in venue, broadcast, and corporate A/V environments. Expected to graduate Fall 2026.</p>
-  </section>
-
+<div class="player">
+  <button class="playpause" id="playPause" aria-label="Play" disabled>
+    <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+    <svg id="pauseIcon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+  </button>
+  <div class="now" id="nowPlaying">
+    <div class="now-title" id="nowTitle">—</div>
+    <div class="now-sub" id="nowSub"></div>
+  </div>
+  <div class="scrub">
+    <span class="time" id="curTime">0:00</span>
+    <input type="range" id="seek" value="0" min="0" max="100" step="0.1" disabled>
+    <span class="time dur" id="durTime">0:00</span>
+  </div>
+  <span class="empty-msg" id="emptyMsg">Select a track</span>
 </div>
 
-<footer>© 2026 Ryan Mercer</footer>
+<audio id="audio" preload="none"></audio>
 
 <script>
 /* ============================================================
    ADD A TRACK: append one object to this array. Nothing else
    in this file needs to change.
 
-   title      : shown in the row
+   title      : shown in the list
    date       : "YYYY-MM-DD" or any short label
-   tags       : short genre/context string, right-aligned
+   tags       : short genre/context string
    audioFile  : filename of the audio file, sitting in this
                 same folder (upload it alongside index.html)
    youtubeId  : the ID from the YouTube URL, e.g. for
                 https://youtu.be/feyz3PxqceQ the ID is
                 "feyz3PxqceQ". Leave as "" if there's no video
-                yet — the video panel will show a placeholder.
+                yet — the toggle will show a "coming soon" note.
 ============================================================ */
 const TRACKS = [
   {
@@ -259,55 +346,74 @@ const TRACKS = [
   }
 ];
 
-const tracklistEl = document.getElementById('tracklist');
+const channelsEl = document.getElementById('channels');
+const audio = document.getElementById('audio');
+const playPauseBtn = document.getElementById('playPause');
+const playIcon = document.getElementById('playIcon');
+const pauseIcon = document.getElementById('pauseIcon');
+const seek = document.getElementById('seek');
+const curTimeEl = document.getElementById('curTime');
+const durTimeEl = document.getElementById('durTime');
+const nowPlayingEl = document.getElementById('nowPlaying');
+const nowTitleEl = document.getElementById('nowTitle');
+const nowSubEl = document.getElementById('nowSub');
+
+let currentIndex = -1;
+let channelEls = [];
+
+function fmt(t){
+  if(!isFinite(t)) return "0:00";
+  const m = Math.floor(t/60);
+  const s = Math.floor(t%60).toString().padStart(2,'0');
+  return `${m}:${s}`;
+}
 
 TRACKS.forEach((t, i) => {
-  const details = document.createElement('details');
-  details.className = 'track';
+  const channel = document.createElement('div');
+  channel.className = 'channel';
 
-  const summary = document.createElement('summary');
-  summary.className = 'track-head';
-  summary.innerHTML = `
-    <span class="chev">▸</span>
-    <span class="idx">${(i+1).toString().padStart(2,'0')}</span>
-    <span class="t-title">${t.title}</span>
-    <span class="t-tags">${t.date}${t.tags ? ' · ' + t.tags : ''}</span>
+  const row = document.createElement('button');
+  row.className = 'channel-row';
+  row.type = 'button';
+  row.setAttribute('aria-label', `Play ${t.title}`);
+  row.innerHTML = `
+    <span class="channel-num">${(i+1).toString().padStart(2,'0')}</span>
+    <span class="channel-meta">
+      <div class="channel-title">${t.title}</div>
+      <div class="channel-tags">${t.tags}</div>
+    </span>
+    <span class="channel-date">${t.date}</span>
+    <span class="channel-state"></span>
   `;
 
-  const body = document.createElement('div');
-  body.className = 'track-body';
-
-  const audioCol = document.createElement('div');
-  audioCol.className = 'col';
-  audioCol.innerHTML = `
-    <p class="col-label">Listen</p>
-    <audio controls preload="none" src="${encodeURI(t.audioFile)}"></audio>
-  `;
-
-  const videoCol = document.createElement('div');
-  videoCol.className = 'col';
+  const videoPanel = document.createElement('div');
+  videoPanel.className = 'video-panel';
   const videoFrame = document.createElement('div');
   videoFrame.className = 'video-frame';
-  videoCol.innerHTML = `<p class="col-label">Watch</p>`;
-  videoCol.appendChild(videoFrame);
-  if(t.youtubeId){
-    videoFrame.innerHTML = `<div class="video-placeholder">Video loads when opened</div>`;
-  } else {
-    videoFrame.innerHTML = `<div class="video-placeholder">Video coming soon</div>`;
-  }
+  videoFrame.innerHTML = `<div class="placeholder">${t.youtubeId ? 'Video loads when opened' : 'Video coming soon'}</div>`;
 
-  body.appendChild(audioCol);
-  body.appendChild(videoCol);
-  details.appendChild(summary);
-  details.appendChild(body);
-  tracklistEl.appendChild(details);
+  const toggleWrap = document.createElement('div');
+  toggleWrap.style.margin = '10px 0 12px';
+  const videoToggle = document.createElement('button');
+  videoToggle.className = 'video-toggle';
+  videoToggle.type = 'button';
+  videoToggle.textContent = 'Watch video';
+  toggleWrap.appendChild(videoToggle);
 
-  // lazy-load the YouTube iframe only once this track is opened,
-  // so closed tracks don't waste bandwidth loading video players
-  let loaded = false;
-  details.addEventListener('toggle', () => {
-    if(details.open && !loaded && t.youtubeId){
-      loaded = true;
+  videoPanel.appendChild(toggleWrap);
+  videoPanel.appendChild(videoFrame);
+
+  channel.appendChild(row);
+  channel.appendChild(videoPanel);
+  channelsEl.appendChild(channel);
+  channelEls.push(channel);
+
+  let videoLoaded = false;
+  videoToggle.addEventListener('click', () => {
+    const isOpen = channel.classList.toggle('video-open');
+    videoToggle.textContent = isOpen ? 'Hide video' : 'Watch video';
+    if(isOpen && !videoLoaded && t.youtubeId){
+      videoLoaded = true;
       videoFrame.innerHTML = `
         <iframe
           src="https://www.youtube.com/embed/${t.youtubeId}"
@@ -320,6 +426,96 @@ TRACKS.forEach((t, i) => {
       `;
     }
   });
+
+  row.addEventListener('click', () => playTrack(i));
+});
+
+function renderStates(){
+  channelEls.forEach((channel, i) => {
+    const stateEl = channel.querySelector('.channel-state');
+    channel.classList.toggle('playing', i === currentIndex);
+    if(i === currentIndex && !audio.paused){
+      stateEl.innerHTML = '<span class="bars"><span></span><span></span><span></span></span>';
+    } else {
+      stateEl.innerHTML = '';
+    }
+  });
+}
+
+function playTrack(i){
+  if(currentIndex === i){
+    // same track: toggle play/pause
+    if(audio.paused){ audio.play().catch(()=>{}); } else { audio.pause(); }
+    return;
+  }
+  currentIndex = i;
+  const t = TRACKS[i];
+  audio.src = encodeURI(t.audioFile);
+  audio.play().catch(()=>{});
+
+  nowPlayingEl.style.display = 'block';
+  nowTitleEl.textContent = t.title;
+  nowSubEl.textContent = t.tags;
+  playPauseBtn.disabled = false;
+  seek.disabled = false;
+  document.getElementById('emptyMsg').style.display = 'none';
+  renderStates();
+}
+
+playPauseBtn.addEventListener('click', () => {
+  if(currentIndex === -1) return;
+  if(audio.paused){ audio.play().catch(()=>{}); } else { audio.pause(); }
+});
+
+audio.addEventListener('play', () => {
+  playIcon.style.display = 'none';
+  pauseIcon.style.display = '';
+  playPauseBtn.setAttribute('aria-label','Pause');
+  renderStates();
+});
+audio.addEventListener('pause', () => {
+  playIcon.style.display = '';
+  pauseIcon.style.display = 'none';
+  playPauseBtn.setAttribute('aria-label','Play');
+  renderStates();
+});
+audio.addEventListener('ended', () => {
+  if(currentIndex < TRACKS.length - 1){
+    playTrack(currentIndex + 1);
+  } else {
+    renderStates();
+  }
+});
+
+let draggingSeek = false;
+seek.addEventListener('mousedown', () => { draggingSeek = true; });
+seek.addEventListener('touchstart', () => { draggingSeek = true; }, {passive:true});
+
+function commitSeek(){
+  draggingSeek = false;
+  if(isFinite(audio.duration)){
+    audio.currentTime = (seek.value / 100) * audio.duration;
+  }
+}
+seek.addEventListener('mouseup', commitSeek);
+seek.addEventListener('touchend', commitSeek);
+
+seek.addEventListener('input', () => {
+  if(isFinite(audio.duration)){
+    curTimeEl.textContent = fmt((seek.value/100) * audio.duration);
+  }
+});
+
+audio.addEventListener('timeupdate', () => {
+  if(!isFinite(audio.duration)) return;
+  if(!draggingSeek){
+    seek.value = (audio.currentTime / audio.duration) * 100;
+  }
+  curTimeEl.textContent = fmt(audio.currentTime);
+});
+
+audio.addEventListener('loadedmetadata', () => {
+  durTimeEl.textContent = fmt(audio.duration);
 });
 </script>
 
