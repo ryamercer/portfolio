@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ryan Mercer - Audio Technician</title>
+
+  <style>
+
+    :root {
+      --bg: #0a0a0a;
+      --panel: #0d0d0d;
+      --line: #2b2b2b;
+      --text: #c9d1d9;
+      --bright: #f0f6fc;
+      --green: #3fb950;
+      --blue: #58a6ff;
+      --yellow: #e3b341;
+      --muted: #6e7681;
+      --grid: rgba(88, 166, 255, 0.15);
+      --spectrum-fill: rgba(63, 185, 80, 0.30);
+    }
+
+    /* A completely different palette, toggled via the button top-right */
+    body.theme-alt {
+      --bg: #faf3e3;
+      --panel: #f2e8d0;
+      --line: #ddccA0;
+      --text: #3b3a30;
+      --bright: #1a1a1a;
+      --green: #a1260d;
+      --blue: #6c3fc5;
+      --yellow: #b5860b;
+      --muted: #8a7f5f;
+      --grid: rgba(108, 63, 197, 0.15);
+      --spectrum-fill: rgba(161, 38, 13, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Courier New", Courier, monospace;
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+      text-align: left;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    #themeToggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 10;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      color: var(--yellow);
+      font-family: inherit;
+      font-size: 13px;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+
+    #themeToggle:hover {
+      border-color: var(--blue);
+    }
+
+    header {
+      background-color: var(--panel);
+      padding: 40px 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 34px;
+      color: var(--bright);
+    }
+
+    header p {
+      margin: 6px 0;
+      color: var(--green);
+    }
+
+    header a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    header a:hover {
+      text-decoration: underline;
+    }
+
+    main {
+      max-width: 700px;
+      margin: 0;
+      padding: 30px 20px;
+    }
+
+    h2 {
+      color: var(--green);
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 6px;
+      font-size: 18px;
+      letter-spacing: 1px;
+    }
+
+    h2::before {
+      content: "# ";
+      color: var(--muted);
+    }
+
+    p {
+      color: var(--text);
+    }
+
+    p a {
+      color: var(--blue);
+    }
+
+    section {
+      margin-bottom: 40px;
+    }
+
+    /* -------- recordings / player -------- */
+
+    #playlist {
+      max-height: 220px;
+      overflow-y: auto;
+      border: 1px solid var(--line);
+      margin-bottom: 16px;
+    }
+
+    .track-button {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      border-bottom: 1px solid var(--line);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+      padding: 12px 14px;
+      cursor: pointer;
+    }
+
+    #playlist .track-button:last-child {
+      border-bottom: none;
+    }
+
+    .track-button::before {
+      content: "> ";
+      color: var(--muted);
+    }
+
+    .track-button:hover {
+      background-color: var(--panel);
+      color: var(--bright);
+    }
+
+    .track-button.active {
+      color: var(--green);
+      background-color: var(--panel);
+    }
+
+    .track-button.active::before {
+      content: "$ ";
+      color: var(--green);
+    }
+
+    /* -------- custom transport -------- */
+
+    /* -------- transport -------- */
+
+#transport {
+  border: 1px solid var(--line);
+  padding: 14px;
+  margin-bottom: 16px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#transportTop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ctrl-btn {
+  background: none;
+  border: 1px solid var(--line);
+  color: var(--blue);
+
+  font-family: inherit;
+  font-size: 15px;
+
+  min-width: 44px;
+
+  padding: 7px 12px;
+
+  cursor: pointer;
+}
+
+.ctrl-btn:hover {
+  border-color: var(--blue);
+  color: var(--bright);
+}
+
+#seekRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#currentTime,
+#durationTime {
+  color: var(--muted);
+  font-size: 13px;
+  min-width: 40px;
+}
+
+#seekBar {
+  flex: 1;
+}
+
+#volumeRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  color: var(--yellow);
+  font-size: 13px;
+}
+
+#volumeSlider {
+  width: 180px;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+
+  height: 5px;
+
+  border-radius: 999px;
+
+  background: var(--line);
+
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+
+  width: 14px;
+  height: 14px;
+
+  border-radius: 50%;
+
+  background: var(--blue);
+
+  border: none;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+
+  border-radius: 50%;
+
+  background: var(--blue);
+
+  border: none;
+}
+
+input[type="range"]::-moz-range-track {
+  background: var(--line);
+  height: 5px;
+}
+
+    /* -------- visualizers -------- */
+
+    .visualizer-row {
+      display: flex;
+      gap: 16px;
+    }
+
+    .visualizer-row canvas {
+      display: block;
+      flex: 1;
+      width: 50%;
+      height: 120px;
+      background-color: var(--panel);
+      border: 1px solid var(--line);
+    }
+
+    @media (max-width: 560px) {
+      .visualizer-row {
+        flex-direction: column;
+      }
+    }
+
+    /* -------- footer -------- */
+
+    footer {
+      background-color: var(--panel);
+      color: var(--muted);
+      text-align: left;
+      padding: 20px;
+      border-top: 1px solid var(--line);
+      font-size: 13px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <button id="themeToggle" type="button">◐ theme</button>
+
+  <header>
+    <h1>Ryan Mercer</h1>
+    <p>Audio Technician</p>
+    <p>
+      <a href="mailto:rmercer105@gmail.com">rmercer105@gmail.com</a>
+      &nbsp;·&nbsp;
+      <a href="tel:6123004465">612-300-4465</a>
+      &nbsp;·&nbsp;
+      Madison, WI
+    </p>
+  </header>
+
+  <main>
+
+    <section>
+      <h2>Recordings</h2>
+
+      <!-- Track list: this box scrolls once there are more tracks than fit -->
+      <div id="playlist"></div>
+
+      <!-- Custom transport controls, no native audio UI -->
+      <div id="transport">
+
+  <div id="transportTop">
+
+    <button id="backBtn" class="ctrl-btn" type="button">◀◀</button>
+
+    <button id="playBtn" class="ctrl-btn" type="button">▶</button>
+
+    <button id="nextBtn" class="ctrl-btn" type="button">▶▶</button>
+
+  </div>
+
+  <div id="seekRow">
+
+    <span id="currentTime">0:00</span>
+
+    <input
+      type="range"
+      id="seekBar"
+      min="0"
+      max="100"
+      value="0">
+
+    <span id="durationTime">0:00</span>
+
+  </div>
+
+  <div id="volumeRow">
+
+    <span>VOL</span>
+
+    <input
+      type="range"
+      id="volumeSlider"
+      min="0"
+      max="1"
+      step="0.01"
+      value="1">
+
+  </div>
+
+</div>
+
+      <audio id="player"></audio>
+
+      <div class="visualizer-row">
+        <canvas id="scope"></canvas>
+        <canvas id="spectrum"></canvas>
+      </div>
+    </section>
+
+    <section>
+      <h2>About Me</h2>
+
+      <p>
+        I'm a Communication Arts student at the University of
+        Wisconsin&ndash;Madison (Radio, TV &amp; Film), graduating Fall
+        2026, with hands-on experience in live sound and broadcast
+        production. I've worked as Assistant Technical Director at WSUM
+        Student Radio, supported public events for the City of Madison
+        Parks Division, and interned at EideCom in Minneapolis &mdash;
+        building skills in FOH mixing, signal routing, multitrack
+        recording, and mixing/mastering across Allen &amp; Heath consoles
+        and Adobe's audio and video tools.
+      </p>
+
+      <p>
+        I'm looking for full-time opportunities in live event production
+        and broadcast operations.
+      </p>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Ryan Mercer</p>
+  </footer>
+
+  <script>
+
+    /* ===============================
+       THEME TOGGLE
+    ================================ */
+
+    const themeToggle = document.getElementById("themeToggle");
+    let altTheme = false;
+
+    themeToggle.addEventListener("click", () => {
+      altTheme = !altTheme;
+      document.body.classList.toggle("theme-alt", altTheme);
+      themeToggle.textContent = altTheme ? "◑ theme" : "◐ theme";
+    });
+
+    /* ===============================
+       EDIT THIS LIST as you add more
+       recordings. The playlist box
+       above will scroll on its own
+       once there are more than fit.
+    ================================ */
+
+    const TRACKS = [
+      {
+        title: "lightris & sero — Cloud Rap, Alt-Pop",
+        file: "2026-06-03 lightris & sero excerpt.wav"
+      },
+      {
+        title: "Sapsucker — Indie Rock, Indie Pop",
+        file: "2026-06-13 Sapsucker excerpt.wav"
+      },
+      {
+        title: "Steeplechase — Singer-Songwriter, Indie Pop",
+        file: "2026-06-26 Steeplechase excerpt.wav"
+      }
+    ];
+
+    const playlist = document.getElementById("playlist");
+    const player = document.getElementById("player");
+    const playBtn = document.getElementById("playBtn");
+    const backBtn = document.getElementById("backBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const currentTimeEl = document.getElementById("currentTime");
+    const durationTimeEl = document.getElementById("durationTime");
+    const seekBar = document.getElementById("seekBar");
+    const volumeSlider = document.getElementById("volumeSlider");
+
+    let currentIndex = -1;
+    let isSeeking = false;
+
+    // build the track list buttons
+    TRACKS.forEach((track, i) => {
+      const button = document.createElement("button");
+      button.className = "track-button";
+      button.type = "button";
+      button.textContent = track.title;
+      button.addEventListener("click", () => loadTrack(i, true));
+      playlist.appendChild(button);
+    });
+
+    function loadTrack(i, autoplay) {
+      currentIndex = i;
+      player.src = TRACKS[i].file;
+      updateActiveButton();
+      setupAudioGraph();
+
+      // reset the transport UI until the new track's metadata loads
+      seekBar.value = 0;
+      currentTimeEl.textContent = "0:00";
+      durationTimeEl.textContent = "0:00";
+
+      if (autoplay) {
+        player.play();
+      }
+    }
+
+    function updateActiveButton() {
+      const buttons = playlist.querySelectorAll(".track-button");
+      buttons.forEach((button, i) => {
+        button.classList.toggle("active", i === currentIndex);
+      });
+    }
+
+    function formatTime(seconds) {
+      if (!isFinite(seconds)) {
+        return "0:00";
+      }
+      const minutes = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60).toString().padStart(2, "0");
+      return minutes + ":" + secs;
+    }
+
+    /* -------- transport controls -------- */
+
+    playBtn.addEventListener("click", () => {
+      if (currentIndex === -1) {
+        loadTrack(0, true);
+        return;
+      }
+      setupAudioGraph();
+      if (player.paused) {
+        player.play();
+      } else {
+        player.pause();
+      }
+    });
+
+    backBtn.addEventListener("click", () => {
+      const newIndex = currentIndex <= 0 ? TRACKS.length - 1 : currentIndex - 1;
+      loadTrack(newIndex, true);
+    });
+
+    nextBtn.addEventListener("click", () => {
+      const newIndex = currentIndex >= TRACKS.length - 1 ? 0 : currentIndex + 1;
+      loadTrack(newIndex, true);
+    });
+
+    player.addEventListener("play", () => {
+      playBtn.textContent = "❚❚";
+    });
+
+    player.addEventListener("pause", () => {
+      playBtn.textContent = "▶";
+    });
+
+    player.addEventListener("ended", () => {
+      nextBtn.click();
+    });
+
+    player.addEventListener("loadedmetadata", () => {
+      seekBar.max = isFinite(player.duration) ? player.duration : 0;
+      durationTimeEl.textContent = formatTime(player.duration);
+    });
+
+    function updatePlayhead() {
+      requestAnimationFrame(updatePlayhead);
+      if (!isSeeking) {
+        currentTimeEl.textContent = formatTime(player.currentTime);
+        seekBar.value = player.currentTime;
+      }
+    }
+    updatePlayhead();
+
+    seekBar.addEventListener("input", () => {
+      isSeeking = true;
+      currentTimeEl.textContent = formatTime(parseFloat(seekBar.value));
+    });
+
+    seekBar.addEventListener("change", () => {
+      player.currentTime = parseFloat(seekBar.value);
+      isSeeking = false;
+    });
+
+    volumeSlider.addEventListener("input", () => {
+      const value = parseFloat(volumeSlider.value);
+      player.volume = value;
+      if (gainNode) {
+        gainNode.gain.value = value;
+      }
+    });
+
+    /* ===============================
+       AUDIO GRAPH
+    ================================ */
+
+    let audioContext;
+    let gainNode;
+    let scopeAnalyser;
+    let scopeData;
+    let specAnalyser;
+    let specRaw;
+    let specSmoothed;
+
+    const SPEC_BLOCK_SIZE = 8192;
+    const FREQ_LOW = 20;
+    const FREQ_HIGH = 20000;
+    const DB_LOW = -80;
+    const DB_HIGH = 0;
+    const AVG_TIME_MS = 1000;
+
+    function setupAudioGraph() {
+      if (audioContext) {
+        return;
+      }
+
+      audioContext = new AudioContext();
+      const source = audioContext.createMediaElementSource(player);
+
+      // volume lives on this gain node, not player.volume — once the
+      // element is routed through Web Audio, the browser stops
+      // respecting that property
+      gainNode = audioContext.createGain();
+      gainNode.gain.value = parseFloat(volumeSlider.value);
+      source.connect(gainNode);
+
+      // oscilloscope tap
+      scopeAnalyser = audioContext.createAnalyser();
+      scopeAnalyser.fftSize = 2048;
+      scopeData = new Uint8Array(scopeAnalyser.fftSize);
+      gainNode.connect(scopeAnalyser);
+      scopeAnalyser.connect(audioContext.destination);
+
+      // SPAN-style spectrum tap (analysis only)
+      specAnalyser = audioContext.createAnalyser();
+      specAnalyser.fftSize = SPEC_BLOCK_SIZE;
+      specAnalyser.minDecibels = DB_LOW;
+      specAnalyser.maxDecibels = DB_HIGH;
+      specAnalyser.smoothingTimeConstant = 0; // manual RT averaging below instead
+      specRaw = new Uint8Array(specAnalyser.frequencyBinCount);
+      specSmoothed = new Float32Array(specAnalyser.frequencyBinCount);
+      gainNode.connect(specAnalyser);
+    }
+
+    /* ===============================
+       OSCILLOSCOPE
+    ================================ */
+
+    const scopeCanvas = document.getElementById("scope");
+    const scopeCtx = scopeCanvas.getContext("2d");
+
+    function resizeCanvases() {
+      [scopeCanvas, specCanvas].forEach((canvas) => {
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+      });
+    }
+
+    function drawScope() {
+      requestAnimationFrame(drawScope);
+
+      const w = scopeCanvas.width;
+      const h = scopeCanvas.height;
+
+      scopeCtx.clearRect(0, 0, w, h);
+
+      // center gridline
+      scopeCtx.strokeStyle = getComputedStyle(document.body).getPropertyValue("--grid");
+      scopeCtx.beginPath();
+      scopeCtx.moveTo(0, h / 2);
+      scopeCtx.lineTo(w, h / 2);
+      scopeCtx.stroke();
+
+      if (!scopeAnalyser) {
+        return;
+      }
+
+      scopeAnalyser.getByteTimeDomainData(scopeData);
+
+      scopeCtx.strokeStyle = getComputedStyle(document.body).getPropertyValue("--green");
+      scopeCtx.lineWidth = 1.5;
+      scopeCtx.beginPath();
+
+      for (let i = 0; i < scopeData.length; i++) {
+        const x = (i / scopeData.length) * w;
+        const y = h / 2 + ((scopeData[i] - 128) / 128) * (h / 2) * 0.9;
+        if (i === 0) {
+          scopeCtx.moveTo(x, y);
+        } else {
+          scopeCtx.lineTo(x, y);
+        }
+      }
+
+      scopeCtx.stroke();
+    }
+
+    /* ===============================
+       SPAN-STYLE SPECTRUM
+       block size: 8192
+       avg time: 1000ms (real time
+       constant, not a per-frame guess)
+       range: -80dB to 0dB, 20Hz-20kHz
+    ================================ */
+
+    const specCanvas = document.getElementById("spectrum");
+    const specCtx = specCanvas.getContext("2d");
+
+    let lastSpecFrame = performance.now();
+
+    function freqToX(freq, w) {
+      return (Math.log(freq / FREQ_LOW) / Math.log(FREQ_HIGH / FREQ_LOW)) * w;
+    }
+
+    function dbToY(db, h) {
+      const norm = Math.max(0, Math.min(1, (db - DB_LOW) / (DB_HIGH - DB_LOW)));
+      return h - norm * h;
+    }
+
+    function drawSpectrum() {
+      requestAnimationFrame(drawSpectrum);
+
+      const w = specCanvas.width;
+      const h = specCanvas.height;
+
+      specCtx.clearRect(0, 0, w, h);
+
+      if (!specAnalyser) {
+        return;
+      }
+
+      specAnalyser.getByteFrequencyData(specRaw);
+
+      const now = performance.now();
+      const dt = now - lastSpecFrame;
+      lastSpecFrame = now;
+      const alpha = 1 - Math.exp(-dt / AVG_TIME_MS);
+
+      for (let i = 0; i < specRaw.length; i++) {
+        specSmoothed[i] += (specRaw[i] - specSmoothed[i]) * alpha;
+      }
+
+      const binHz = audioContext.sampleRate / SPEC_BLOCK_SIZE;
+      const points = [];
+
+      for (let i = 0; i < specSmoothed.length; i++) {
+        const freq = i * binHz;
+        if (freq < FREQ_LOW) continue;
+        if (freq > FREQ_HIGH) break;
+
+        const db = DB_LOW + (specSmoothed[i] / 255) * (DB_HIGH - DB_LOW);
+        points.push({
+          x: freqToX(freq, w),
+          y: dbToY(db, h)
+        });
+      }
+
+      if (points.length < 2) {
+        return;
+      }
+
+      // filled area under the curve, SPAN-style
+      specCtx.beginPath();
+      specCtx.moveTo(points[0].x, h);
+      points.forEach((p) => specCtx.lineTo(p.x, p.y));
+      specCtx.lineTo(points[points.length - 1].x, h);
+      specCtx.closePath();
+      specCtx.fillStyle = getComputedStyle(document.body).getPropertyValue("--spectrum-fill");
+      specCtx.fill();
+
+      // outline
+      specCtx.beginPath();
+      points.forEach((p, i) => {
+        if (i === 0) {
+          specCtx.moveTo(p.x, p.y);
+        } else {
+          specCtx.lineTo(p.x, p.y);
+        }
+      });
+      specCtx.strokeStyle = getComputedStyle(document.body).getPropertyValue("--blue");
+      specCtx.lineWidth = 1.5;
+      specCtx.stroke();
+    }
+
+    window.addEventListener("resize", resizeCanvases);
+    resizeCanvases();
+    drawScope();
+    drawSpectrum();
+
+  </script>
+
+</body>
+</html>
