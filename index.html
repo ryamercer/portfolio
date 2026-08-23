@@ -44,28 +44,28 @@
 
   /* ---------------- header ---------------- */
   header.masthead{
-    padding:clamp(32px,7vw,72px) clamp(20px,6vw,64px) clamp(24px,4vw,40px);
+    padding:clamp(28px,6vw,56px) clamp(20px,6vw,64px) clamp(20px,4vw,32px);
     border-bottom:1px solid var(--line);
   }
   header.masthead h1{
-    font-size:clamp(30px,4.5vw,52px);
+    font-size:clamp(28px,4vw,44px);
     font-weight:700;
     margin:0 0 6px;
     letter-spacing:-0.01em;
   }
   header.masthead .role{
     color:var(--accent);
-    font-size:13px;
+    font-size:12.5px;
     text-transform:uppercase;
     letter-spacing:0.12em;
-    margin:0 0 18px;
+    margin:0 0 14px;
   }
   header.masthead .contact{
     display:flex;
     flex-wrap:wrap;
     gap:4px 14px;
     color:var(--text-dim);
-    font-size:13.5px;
+    font-size:13px;
   }
   header.masthead .contact a{
     color:var(--text-dim);
@@ -75,60 +75,81 @@
   }
   header.masthead .contact a:hover{ color:var(--accent); border-color:var(--accent); }
 
-  /* ---------------- track grid ---------------- */
-  main{ padding:clamp(24px,5vw,40px) clamp(20px,6vw,64px) 0; max-width:1400px; }
+  /* ---------------- layout ---------------- */
+  main{
+    padding:clamp(20px,4vw,32px) clamp(20px,6vw,64px) 0;
+    max-width:1400px;
+  }
+
+  .layout{
+    display:grid;
+    grid-template-columns:340px 1fr;
+    gap:24px;
+    align-items:start;
+  }
+  @media (max-width:880px){
+    .layout{ grid-template-columns:1fr; }
+  }
 
   .list-head{
-    margin:0 0 18px;
+    margin:0 0 12px;
     color:var(--text-dim);
     font-size:11px;
     text-transform:uppercase;
     letter-spacing:0.1em;
   }
 
-  .grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(210px, 1fr));
-    gap:14px;
-  }
-
-  .card{
+  /* ---------------- scrolling list ---------------- */
+  .list-panel{
     border:1px solid var(--line);
     border-radius:6px;
     background:var(--surface);
-    overflow:hidden;
-    transition:border-color .15s;
+    max-height:min(560px, 70vh);
+    overflow-y:auto;
   }
-  .card:hover{ border-color:var(--accent-dim); }
-  .card.playing{ border-color:var(--accent); }
+  @media (max-width:880px){
+    .list-panel{ max-height:420px; }
+  }
 
-  .thumb-wrap{
-    position:relative;
-    aspect-ratio:16/9;
-    background:#0B0C0F;
-    overflow:hidden;
+  .track-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    width:100%;
+    padding:12px 14px;
+    background:none;
+    border:none;
+    border-bottom:1px solid var(--line);
+    color:var(--text);
+    font-family:inherit;
+    text-align:left;
+    cursor:pointer;
   }
-  .thumb-wrap img{
-    position:absolute; inset:0;
-    width:100%; height:100%;
-    object-fit:cover;
-    filter:saturate(0.55) brightness(0.5);
-  }
-  .thumb-fallback{
-    position:absolute; inset:0;
-    display:flex; align-items:center; justify-content:center;
-    background:
-      repeating-linear-gradient(135deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 2px, transparent 2px, transparent 10px),
-      var(--surface-hi);
-  }
-  .thumb-fallback svg{ width:24px; height:24px; opacity:0.3; }
+  .track-row:last-child{ border-bottom:none; }
+  .track-row:hover{ background:var(--surface-hi); }
+  .track-row.active{ background:rgba(232,163,61,0.08); }
 
-  .thumb-state{
-    position:absolute; top:8px; left:8px;
-    width:20px; height:20px;
-    display:flex; align-items:center; justify-content:center;
+  .track-num{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:12px;
+    color:var(--text-dim);
+    border:1px solid var(--line);
+    border-radius:3px;
+    height:24px;
+    width:24px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex:none;
   }
-  .bars{ display:flex; align-items:flex-end; gap:2px; height:13px; }
+  .track-row.active .track-num{ color:var(--accent); border-color:var(--accent-dim); }
+
+  .track-meta{ min-width:0; flex:1; }
+  .track-title{ font-weight:600; font-size:13.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .track-sub{ font-size:11px; color:var(--text-dim); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+  .track-state{ width:16px; height:16px; flex:none; display:flex; align-items:center; justify-content:center; }
+  .bars{ display:flex; align-items:flex-end; gap:2px; height:12px; }
   .bars span{
     width:2.5px; background:var(--accent); display:block;
     animation:bounce 0.9s ease-in-out infinite;
@@ -138,98 +159,45 @@
   .bars span:nth-child(3){ height:65%; animation-delay:.3s; }
   @keyframes bounce{ 0%,100%{ transform:scaleY(0.4); } 50%{ transform:scaleY(1); } }
 
-  .card .meta{ padding:10px 12px 4px; }
-  .card .title{ font-weight:600; font-size:13.5px; color:var(--text); }
-  .card .sub{ font-size:11px; color:var(--text-dim); margin-top:3px; }
-
-  .card-actions{
-    display:flex;
-    gap:8px;
-    padding:10px 12px 12px;
+  /* ---------------- video panel ---------------- */
+  .video-panel{
+    position:sticky;
+    top:20px;
   }
-
-  .btn{
-    display:flex; align-items:center; justify-content:center; gap:6px;
-    flex:1;
-    background:none;
-    border:1px solid var(--line);
-    color:var(--text-dim);
-    font-family:inherit;
-    font-size:11.5px;
-    padding:8px 10px;
-    border-radius:4px;
-    cursor:pointer;
-    white-space:nowrap;
-  }
-  .btn svg{ width:11px; height:11px; flex:none; }
-  .btn:hover{ color:var(--text); border-color:var(--text-dim); }
-
-  .btn-play{ color:var(--accent); border-color:var(--accent-dim); }
-  .btn-play:hover{ border-color:var(--accent); }
-  .card.playing .btn-play{ background:rgba(232,163,61,0.1); }
-
-  .btn-watch:hover{ color:var(--accent); border-color:var(--accent-dim); }
-
-  .no-video{
-    flex:1;
-    display:flex; align-items:center; justify-content:center;
-    font-size:11px; color:var(--text-dim); opacity:0.55;
-    border:1px dashed var(--line);
-    border-radius:4px;
-    padding:8px 10px;
-  }
-
-  @media (max-width:480px){
-    .grid{ grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:10px; }
-    .card .title{ font-size:12.5px; }
-    .btn{ font-size:10.5px; padding:7px 6px; }
-    .btn .btn-label{ display:none; }
-  }
-
-  /* ---------------- video lightbox ---------------- */
-  .lightbox{
-    position:fixed; inset:0;
-    background:rgba(8,9,11,0.9);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    padding:clamp(16px,5vw,60px);
-    z-index:200;
-  }
-  .lightbox.open{ display:flex; }
-  .lightbox-box{
+  .video-frame{
     position:relative;
     width:100%;
-    max-width:860px;
     aspect-ratio:16/9;
-    background:#000;
+    background:#0B0C0F;
+    border:1px solid var(--line);
     border-radius:6px;
     overflow:hidden;
-    border:1px solid var(--line);
   }
-  .lightbox-box iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
-  .lightbox-close{
-    position:absolute; top:10px; right:10px;
-    z-index:5;
-    background:rgba(11,12,15,0.85);
-    border:1px solid var(--line);
-    color:var(--text);
-    width:34px; height:34px;
-    border-radius:50%;
-    cursor:pointer;
+  .video-frame iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+  .video-frame .placeholder{
+    position:absolute; inset:0;
     display:flex; align-items:center; justify-content:center;
+    flex-direction:column; gap:8px;
+    color:var(--text-dim); font-size:12.5px; text-align:center; padding:20px;
+    background:
+      repeating-linear-gradient(135deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 2px, transparent 2px, transparent 10px),
+      var(--surface);
   }
-  .lightbox-close:hover{ color:var(--accent); border-color:var(--accent); background:rgba(11,12,15,0.95); }
-  .lightbox-close svg{ width:16px; height:16px; }
-  .lightbox-hint{
-    position:absolute; top:16px; left:16px;
-    z-index:5;
+  .video-frame .placeholder svg{ width:26px; height:26px; opacity:0.3; }
+
+  .video-caption{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:10px;
+    margin-top:10px;
+    font-size:12px;
     color:var(--text-dim);
-    font-size:11px;
-    background:rgba(11,12,15,0.7);
-    padding:5px 9px;
-    border-radius:4px;
-    pointer-events:none;
+  }
+  .video-caption .vc-title{ color:var(--text); font-weight:600; font-size:13.5px; }
+
+  @media (max-width:880px){
+    .video-panel{ position:static; }
   }
 
   /* ---------------- sticky playhead footer ---------------- */
@@ -325,8 +293,23 @@
 </header>
 
 <main>
-  <div class="list-head">FOH Recordings</div>
-  <div class="grid" id="grid"></div>
+  <div class="list-head">FOH Recordings — click a track to play</div>
+  <div class="layout">
+    <div class="list-panel" id="listPanel"></div>
+
+    <div class="video-panel">
+      <div class="video-frame" id="videoFrame">
+        <div class="placeholder" id="videoPlaceholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+          Select a track to begin
+        </div>
+      </div>
+      <div class="video-caption">
+        <span class="vc-title" id="vcTitle"></span>
+        <span id="vcNote"></span>
+      </div>
+    </div>
+  </div>
 </main>
 
 <footer class="credit">© 2026 Ryan Mercer</footer>
@@ -348,15 +331,6 @@
   <span class="empty-msg" id="emptyMsg">Select a track</span>
 </div>
 
-<div class="lightbox" id="lightbox">
-  <div class="lightbox-box" id="lightboxBox">
-    <span class="lightbox-hint">Esc or click outside to close</span>
-    <button class="lightbox-close" id="lightboxClose" aria-label="Close video">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
-    </button>
-  </div>
-</div>
-
 <audio id="audio" preload="none"></audio>
 
 <script>
@@ -364,15 +338,19 @@
    ADD A TRACK: append one object to this array. Nothing else
    in this file needs to change.
 
-   title      : artist / act name, shown on the card
+   title      : artist / act name, shown in the list
    date       : "YYYY-MM-DD" or any short label
    tags       : short genre/context string
    audioFile  : filename of the audio file, sitting in this
-                same folder (upload it alongside index.html)
+                same folder (upload it alongside index.html).
+                This is what actually plays through the bottom
+                player. It always plays when you click the row.
    youtubeId  : the ID from the YouTube URL, e.g. for
                 https://youtu.be/feyz3PxqceQ the ID is
-                "feyz3PxqceQ". Leave as "" if there's no video
-                yet — the card shows "No video yet" instead.
+                "feyz3PxqceQ". Leave as "" if there is no video
+                yet. The video panel shows the video muted (the
+                audio track is the sound source) if present, or
+                a placeholder if not.
 ============================================================ */
 const TRACKS = [
   {
@@ -400,12 +378,16 @@ const TRACKS = [
     title: "diog3n3s",
     date: "2026-08-07",
     tags: "Singer-Songwriter, Indie Folk",
-    audiofile: "2026-08-07 diog3n3s excerpt.wav",
+    audioFile: "2026-08-07 diog3n3s excerpt.wav",
     youtubeId: "UYB5IYjAgcY"
   }
 ];
 
-const gridEl = document.getElementById('grid');
+const listPanel = document.getElementById('listPanel');
+const videoFrame = document.getElementById('videoFrame');
+const videoPlaceholder = document.getElementById('videoPlaceholder');
+const vcTitle = document.getElementById('vcTitle');
+const vcNote = document.getElementById('vcNote');
 const audio = document.getElementById('audio');
 const playPauseBtn = document.getElementById('playPause');
 const playIcon = document.getElementById('playIcon');
@@ -417,13 +399,9 @@ const nowPlayingEl = document.getElementById('nowPlaying');
 const nowTitleEl = document.getElementById('nowTitle');
 const nowSubEl = document.getElementById('nowSub');
 const emptyMsg = document.getElementById('emptyMsg');
-const lightbox = document.getElementById('lightbox');
-const lightboxBox = document.getElementById('lightboxBox');
-const lightboxClose = document.getElementById('lightboxClose');
 
 let currentIndex = -1;
-let cardEls = [];
-let playBtnEls = [];
+let rowEls = [];
 
 function fmt(t){
   if(!isFinite(t)) return "0:00";
@@ -432,114 +410,86 @@ function fmt(t){
   return `${m}:${s}`;
 }
 
-const PLAY_SVG = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`;
-const WATCH_SVG = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 10.5V7a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h12a1 1 0 001-1v-3.5l4 4v-11l-4 4z"/></svg>`;
-const NOTE_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>`;
-
 TRACKS.forEach((t, i) => {
-  const card = document.createElement('div');
-  card.className = 'card';
-
-  const thumbWrap = document.createElement('div');
-  thumbWrap.className = 'thumb-wrap';
-  thumbWrap.innerHTML = t.youtubeId
-    ? `<img src="https://img.youtube.com/vi/${t.youtubeId}/mqdefault.jpg" alt="" loading="lazy">`
-    : `<div class="thumb-fallback">${NOTE_SVG}</div>`;
-  const stateEl = document.createElement('span');
-  stateEl.className = 'thumb-state';
-  thumbWrap.appendChild(stateEl);
-
-  const meta = document.createElement('div');
-  meta.className = 'meta';
-  meta.innerHTML = `
-    <div class="title">${t.title}</div>
-    <div class="sub">${t.date} · ${t.tags}</div>
+  const row = document.createElement('button');
+  row.type = 'button';
+  row.className = 'track-row';
+  row.innerHTML = `
+    <span class="track-num">${(i+1).toString().padStart(2,'0')}</span>
+    <span class="track-meta">
+      <div class="track-title">${t.title}</div>
+      <div class="track-sub">${t.date} · ${t.tags}</div>
+    </span>
+    <span class="track-state"></span>
   `;
-
-  const actions = document.createElement('div');
-  actions.className = 'card-actions';
-
-  const playBtn = document.createElement('button');
-  playBtn.className = 'btn btn-play';
-  playBtn.innerHTML = `${PLAY_SVG}<span class="btn-label">Play</span>`;
-  playBtn.addEventListener('click', () => playTrack(i));
-  actions.appendChild(playBtn);
-
-  if(t.youtubeId){
-    const watchBtn = document.createElement('button');
-    watchBtn.className = 'btn btn-watch';
-    watchBtn.innerHTML = `${WATCH_SVG}<span class="btn-label">Watch</span>`;
-    watchBtn.addEventListener('click', () => openLightbox(t.youtubeId, t.title));
-    actions.appendChild(watchBtn);
-  } else {
-    const noVid = document.createElement('span');
-    noVid.className = 'no-video';
-    noVid.textContent = 'No video yet';
-    actions.appendChild(noVid);
-  }
-
-  card.appendChild(thumbWrap);
-  card.appendChild(meta);
-  card.appendChild(actions);
-  gridEl.appendChild(card);
-
-  cardEls.push(card);
-  playBtnEls.push(playBtn);
+  row.addEventListener('click', () => selectTrack(i));
+  listPanel.appendChild(row);
+  rowEls.push(row);
 });
 
-function openLightbox(youtubeId, title){
-  lightboxBox.querySelectorAll('iframe').forEach(f => f.remove());
-  const iframe = document.createElement('iframe');
-  iframe.src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1`;
-  iframe.title = title;
-  iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
-  iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
-  iframe.setAttribute('allowfullscreen', '');
-  iframe.frameBorder = '0';
-  lightboxBox.insertBefore(iframe, lightboxBox.firstChild);
-  lightbox.classList.add('open');
-}
+function updateVideoPanel(t){
+  videoFrame.querySelectorAll('iframe').forEach(f => f.remove());
+  vcTitle.textContent = t.title;
 
-function closeLightbox(){
-  lightbox.classList.remove('open');
-  lightboxBox.querySelectorAll('iframe').forEach(f => f.remove());
+  if(t.youtubeId){
+    videoPlaceholder.style.display = 'none';
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube.com/embed/${t.youtubeId}?autoplay=1&mute=1`;
+    iframe.title = t.title;
+    iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+    iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+    iframe.setAttribute('allowfullscreen', '');
+    iframe.frameBorder = '0';
+    videoFrame.appendChild(iframe);
+    vcNote.textContent = 'Video muted — audio plays from the track below';
+  } else {
+    videoPlaceholder.style.display = 'flex';
+    videoPlaceholder.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+      No video for this recording yet
+    `;
+    vcNote.textContent = '';
+  }
 }
-
-lightboxClose.addEventListener('click', closeLightbox);
-lightbox.addEventListener('click', (e) => { if(e.target === lightbox) closeLightbox(); });
-document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeLightbox(); });
 
 function renderStates(){
-  cardEls.forEach((card, i) => {
-    const stateEl = card.querySelector('.thumb-state');
-    const playBtn = playBtnEls[i];
+  rowEls.forEach((row, i) => {
+    const stateEl = row.querySelector('.track-state');
     const isCurrent = i === currentIndex;
-    card.classList.toggle('playing', isCurrent);
+    row.classList.toggle('active', isCurrent);
     if(isCurrent && !audio.paused){
       stateEl.innerHTML = '<span class="bars"><span></span><span></span><span></span></span>';
-      playBtn.innerHTML = `<span class="bars"><span></span><span></span><span></span></span><span class="btn-label">Pause</span>`;
     } else {
       stateEl.innerHTML = '';
-      playBtn.innerHTML = `${PLAY_SVG}<span class="btn-label">Play</span>`;
     }
   });
 }
 
-function playTrack(i){
+function selectTrack(i){
+  const t = TRACKS[i];
+  updateVideoPanel(t);
+
   if(currentIndex === i){
     if(audio.paused){ audio.play().catch(()=>{}); } else { audio.pause(); }
     return;
   }
+
   currentIndex = i;
-  const t = TRACKS[i];
-  audio.src = encodeURI(t.audioFile);
-  audio.play().catch(()=>{});
+
+  if(t.audioFile){
+    audio.src = encodeURI(t.audioFile);
+    audio.play().catch(()=>{});
+  } else {
+    audio.pause();
+    audio.removeAttribute('src');
+    audio.load();
+  }
 
   nowPlayingEl.style.display = 'block';
   nowTitleEl.textContent = t.title;
-  nowSubEl.textContent = `${t.date} · ${t.tags}`;
-  playPauseBtn.disabled = false;
-  seek.disabled = false;
+  nowSubEl.textContent = t.audioFile ? `${t.date} · ${t.tags}` : 'No audio yet';
+  playPauseBtn.disabled = !t.audioFile;
+  seek.disabled = !t.audioFile;
   emptyMsg.style.display = 'none';
   renderStates();
 }
@@ -563,7 +513,7 @@ audio.addEventListener('pause', () => {
 });
 audio.addEventListener('ended', () => {
   if(currentIndex < TRACKS.length - 1){
-    playTrack(currentIndex + 1);
+    selectTrack(currentIndex + 1);
   } else {
     renderStates();
   }
